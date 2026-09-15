@@ -1,5 +1,6 @@
 ---
 import { site } from '../../data/site';
+import { services } from '../../data/services';
 import {
   graph,
   personSchema,
@@ -38,7 +39,11 @@ const imageUrl = image ? new URL(image, siteUrl).href : undefined;
 
 // Escaping "<" stops a string value containing "</script>" from closing the tag.
 const structuredData = JSON.stringify(
-  graph([personSchema(siteUrl), professionalServiceSchema(siteUrl), ...jsonLd]),
+  graph([
+    personSchema(siteUrl),
+    professionalServiceSchema(siteUrl, { services: services.map((s) => s.name) }),
+    ...jsonLd,
+  ]),
 ).replace(/</g, '\\u003c');
 ---
 

@@ -22,6 +22,8 @@ const { title, description, noindex, heading = title } = Astro.props;
       <slot />
     </div>
   </article>
+  {/* Full-bleed bands (e.g. CtaBand) that shouldn't sit inside the page measure. */}
+  <slot name="after" />
 </Base>
 
 <style>

@@ -31,7 +31,7 @@ export function personSchema(siteUrl: URL | string): JsonLdNode {
 }
 
 export interface ProfessionalServiceOptions {
-  /** Service names. Wired from src/data/services.ts once it exists (Step 7). */
+  /** Service names, from src/data/services.ts. */
   services?: readonly string[];
 }
 

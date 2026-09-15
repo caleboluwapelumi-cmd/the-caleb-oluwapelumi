@@ -1,0 +1,157 @@
+---
+import Page from '../layouts/Page.astro';
+import Button from '../components/ui/Button.astro';
+import Reveal from '../components/ui/Reveal.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import { leadServices, supportingServices, type Service } from '../data/services';
+
+// Lead offers first, then supporting — the same hierarchy as the homepage grid.
+const ordered: readonly Service[] = [...leadServices, ...supportingServices];
+---
+
+{/* TODO(copy): meta description for the services page. */}
+<Page title="Services" description="TODO(copy): services page meta description">
+  <p slot="lede">TODO(copy): services page intro</p>
+
+  <div class="layout">
+    <nav class="toc" aria-labelledby="toc-title">
+      {/* TODO(copy): table of contents label. */}
+      <h2 id="toc-title" class="eyebrow">On this page</h2>
+      <ol role="list">
+        {
+          ordered.map((service) => (
+            <li>
+              <a href={`#${service.slug}`}>{service.name}</a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <div class="services">
+      {
+        ordered.map((service) => (
+          <section id={service.slug} class="service" aria-labelledby={`${service.slug}-title`}>
+            <Reveal>
+              {/* TODO(copy): tier labels. */}
+              <p class="eyebrow">{service.tier === 'lead' ? 'Core service' : 'Supporting service'}</p>
+              <h2 id={`${service.slug}-title`}>{service.name}</h2>
+
+              <div class="detail">
+                {/* TODO(copy): subheading labels. */}
+                <h3>What it is</h3>
+                <p>{service.whatItIs}</p>
+
+                <h3>Who it’s for</h3>
+                <p>{service.whoItsFor}</p>
+
+                <h3>What you get</h3>
+                <ul>
+                  {service.deliverables.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="actions">
+                {/* TODO(copy): CTA labels. */}
+                <Button href={`/contact?service=${service.slug}`} variant="primary">
+                  Talk about {service.name.toLowerCase()}
+                </Button>
+                {service.priced && (
+                  <Button href={`/pricing#${service.slug}`} variant="ghost">
+                    See {service.name.toLowerCase()} pricing
+                  </Button>
+                )}
+              </div>
+            </Reveal>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+  <CtaBand slot="after" id="services-cta" />
+</Page>
+
+<style>
+  .layout {
+    display: grid;
+    gap: 3rem;
+  }
+
+  @media (width >= 64rem) {
+    .layout {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: 4rem;
+      align-items: start;
+    }
+
+    /* Clears the compact sticky header. */
+    .toc {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+
+  .toc {
+    padding-left: 1rem;
+    border-left: 1px solid var(--color-rule);
+  }
+
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--color-ink);
+    text-decoration-line: none;
+  }
+
+  @media (hover: hover) {
+    .toc a:hover {
+      text-decoration-line: underline;
+    }
+  }
+
+  .service + .service {
+    margin-top: clamp(3.5rem, 3rem + 2vw, 5rem);
+    padding-top: clamp(3.5rem, 3rem + 2vw, 5rem);
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .service h2 {
+    margin-top: 0.5rem;
+  }
+
+  .detail {
+    max-width: 68ch;
+  }
+
+  .detail h3 {
+    margin-top: 2rem;
+  }
+
+  .detail p,
+  .detail ul {
+    margin-top: 0.5rem;
+  }
+
+  .detail ul {
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+
+  .detail li + li {
+    margin-top: 0.375rem;
+  }
+
+  .detail li::marker {
+    color: var(--color-accent-ink);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-top: 2rem;
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import { site } from '../../data/site';
+import { services, serviceHref } from '../../data/services';
 import { isCurrent } from '../../lib/nav';
 
 const pathname = Astro.url.pathname;
@@ -13,9 +14,14 @@ const year = new Date().getFullYear();
       {/* TODO(copy): footer column headings ("Services", "Site", "Contact"). */}
       <section aria-labelledby="footer-services">
         <h2 id="footer-services">Services</h2>
-        {/* TODO(copy): individual service links, from src/data/services.ts once it exists. */}
         <ul role="list">
-          <li><a href="/services">All services</a></li>
+          {
+            services.map((service) => (
+              <li>
+                <a href={serviceHref(service.slug)}>{service.name}</a>
+              </li>
+            ))
+          }
         </ul>
       </section>
 
