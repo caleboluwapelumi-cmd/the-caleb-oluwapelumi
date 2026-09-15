@@ -1,0 +1,62 @@
+---
+import Page from '../../layouts/Page.astro';
+import InsightCard from '../../components/ui/InsightCard.astro';
+import FilterBar from '../../components/ui/FilterBar.astro';
+import Button from '../../components/ui/Button.astro';
+import { getPublishedInsights, toInsightCard } from '../../lib/collections';
+import { insightTags, insightTagLabels } from '../../data/taxonomy';
+
+const entries = await getPublishedInsights();
+const present = new Set(entries.flatMap((e) => e.data.tags));
+const options = insightTags
+  .filter((t) => present.has(t))
+  .map((t) => ({ value: t, label: insightTagLabels[t] }));
+---
+
+{/* TODO(copy): meta description for the insights index. */}
+<Page title="Insights" description="TODO(copy): insights page meta description">
+  <Fragment slot="lede">
+    <p>TODO(copy): insights page intro</p>
+    <p>
+      {/* TODO(copy): RSS link label. */}
+      <a href="/rss.xml">Subscribe via RSS</a>
+    </p>
+  </Fragment>
+
+  {
+    entries.length > 0 ? (
+      <div data-filter-root data-filter-param="tag">
+        {/* TODO(copy): filter group label. */}
+        {options.length > 1 && <FilterBar label="Filter insights by tag" options={options} />}
+        <ul class="list" role="list">
+          {entries.map((entry) => (
+            <li data-filter-values={entry.data.tags.join(' ')}>
+              <InsightCard {...toInsightCard(entry, 'h2')} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <div class="empty">
+        {/* TODO(copy): empty state, shown until the first post is published. */}
+        <p class="measure">TODO(copy): insights are on the way</p>
+        <Button href="/contact" variant="secondary">Get in touch</Button>
+      </div>
+    )
+  }
+</Page>
+
+<style>
+  .list {
+    display: grid;
+    gap: 2.5rem;
+    max-width: 68ch;
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+</style>

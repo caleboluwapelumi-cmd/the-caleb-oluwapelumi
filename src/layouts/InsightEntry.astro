@@ -1,0 +1,219 @@
+---
+import { Image } from 'astro:assets';
+import Base from './Base.astro';
+import Tag from '../components/ui/Tag.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import { insightTagLabels } from '../data/taxonomy';
+import { blogPostingSchema } from '../lib/jsonld';
+import { formatDate } from '../lib/dates';
+import { insightHref, readingMinutes, type InsightEntry } from '../lib/collections';
+
+export interface Props {
+  entry: InsightEntry;
+  /** Older post. */
+  prev?: InsightEntry;
+  /** Newer post. */
+  next?: InsightEntry;
+}
+
+const { entry, prev, next } = Astro.props;
+const { data } = entry;
+const siteUrl = Astro.site ?? Astro.url;
+const minutes = readingMinutes(entry.body);
+---
+
+<Base
+  title={data.title}
+  description={data.description}
+  type="article"
+  jsonLd={[
+    blogPostingSchema(siteUrl, {
+      path: insightHref(entry),
+      title: data.title,
+      description: data.description,
+      publishDate: data.publishDate,
+      updatedDate: data.updatedDate,
+      tags: data.tags,
+    }),
+  ]}
+>
+  <article class="shell post">
+    <header class="post-header">
+      {/* TODO(copy): back link and meta labels. */}
+      <p class="eyebrow"><a href="/insights" class="back">Insights</a></p>
+      <h1>{data.title}</h1>
+      <p class="description">{data.description}</p>
+      <p class="meta">
+        <time datetime={data.publishDate.toISOString()}>{formatDate(data.publishDate)}</time>
+        {
+          data.updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                Updated <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate)}</time>
+              </span>
+            </>
+          )
+        }
+        <span aria-hidden="true">·</span>
+        <span>{minutes} min read</span>
+      </p>
+      <ul class="tags" role="list" aria-label="Tags">
+        {
+          data.tags.map((tag) => (
+            <li>
+              <Tag href={`/insights?tag=${tag}`}>{insightTagLabels[tag]}</Tag>
+            </li>
+          ))
+        }
+      </ul>
+    </header>
+
+    {
+      data.cover && data.coverAlt && (
+        <div class="cover">
+          <Image
+            src={data.cover}
+            alt={data.coverAlt}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 48rem) 68ch, calc(100vw - 2.5rem)"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      )
+    }
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {
+      (prev || next) && (
+        <nav class="pager" aria-label="More insights">
+          {prev && (
+            <a href={insightHref(prev)} rel="prev" class="pager-link">
+              {/* TODO(copy): pager labels. */}
+              <span class="eyebrow">Older</span>
+              <span class="pager-title">{prev.data.title}</span>
+            </a>
+          )}
+          {next && (
+            <a href={insightHref(next)} rel="next" class="pager-link pager-link--next">
+              <span class="eyebrow">Newer</span>
+              <span class="pager-title">{next.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+
+  <CtaBand id="insight-cta" />
+</Base>
+
+<style>
+  .post {
+    padding-block: clamp(3rem, 2rem + 3vw, 5rem) 0;
+  }
+
+  /* Header, cover and body share the 68ch reading column. */
+  .post-header,
+  .cover,
+  .pager {
+    max-width: 68ch;
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: inherit;
+  }
+
+  h1 {
+    margin-top: 0.5rem;
+  }
+
+  .description {
+    margin-top: 1.25rem;
+    font-size: var(--text-h3);
+    line-height: 1.4;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    font-size: var(--text-small);
+    color: var(--color-ink-muted);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .cover {
+    margin-top: 2.5rem;
+  }
+
+  .cover :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  .prose {
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .pager {
+    display: grid;
+    gap: 1rem;
+    margin-block: clamp(4rem, 3rem + 3vw, 6rem);
+  }
+
+  @media (width >= 40rem) {
+    .pager {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .pager-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-height: 2.75rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--color-rule);
+    color: var(--color-ink);
+    text-decoration-line: none;
+    transition: border-color var(--dur-fast) var(--ease-out-expo);
+  }
+
+  .pager-link--next {
+    grid-column: -2;
+    text-align: end;
+  }
+
+  .pager-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: 1.25;
+  }
+
+  @media (hover: hover) {
+    .pager-link:hover {
+      border-top-color: var(--color-accent);
+    }
+    .pager-link:hover .pager-title {
+      text-decoration-line: underline;
+    }
+  }
+</style>

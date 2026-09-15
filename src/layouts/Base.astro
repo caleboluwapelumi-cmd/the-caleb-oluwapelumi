@@ -4,6 +4,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import Seo, { type Props as SeoProps } from '../components/seo/Seo.astro';
+import { site } from '../data/site';
 
 export interface Props extends SeoProps {}
 
@@ -16,6 +17,7 @@ const seo = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} · Insights`} href="/rss.xml" />
     <Seo {...seo} />
     <ClientRouter />
     {/* Without JS the menu toggle can't open anything, so small screens fall

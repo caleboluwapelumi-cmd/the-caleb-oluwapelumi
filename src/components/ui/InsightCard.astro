@@ -1,4 +1,6 @@
 ---
+import { formatDate } from '../../lib/dates';
+
 export interface Props {
   href: string;
   title: string;
@@ -19,12 +21,7 @@ const {
   headingLevel: Heading = 'h3',
 } = Astro.props;
 
-const displayDate = publishDate.toLocaleDateString('en-GB', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
+const displayDate = formatDate(publishDate);
 ---
 
 <article class="insight-card">

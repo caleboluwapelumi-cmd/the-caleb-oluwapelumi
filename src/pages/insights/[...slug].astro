@@ -1,0 +1,21 @@
+---
+import { render } from 'astro:content';
+import InsightEntryLayout from '../../layouts/InsightEntry.astro';
+import { getPublishedInsights } from '../../lib/collections';
+
+export async function getStaticPaths() {
+  // Newest first, so the older post is the next index along.
+  const entries = await getPublishedInsights();
+  return entries.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, prev: entries[i + 1], next: entries[i - 1] },
+  }));
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<InsightEntryLayout entry={entry} prev={prev} next={next}>
+  <Content />
+</InsightEntryLayout>

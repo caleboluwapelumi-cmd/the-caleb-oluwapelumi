@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { workCategories } from './data/taxonomy';
+import { insightTags, workCategories } from './data/taxonomy';
 
 const work = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/work' }),
@@ -39,4 +39,25 @@ const work = defineCollection({
     }),
 });
 
-export const collections = { work };
+const insights = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/insights' }),
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(),
+        description: z.string().max(160), // becomes the meta description
+        publishDate: z.coerce.date(),
+        updatedDate: z.coerce.date().optional(),
+        tags: z.array(z.enum(insightTags)).min(1),
+        cover: image().optional(),
+        coverAlt: z.string().optional(),
+        draft: z.boolean().default(false),
+      })
+      // Both are optional, but a cover without alt text is a build failure.
+      .refine((post) => !post.cover || Boolean(post.coverAlt), {
+        message: 'coverAlt is required when cover is set',
+        path: ['coverAlt'],
+      }),
+});
+
+export const collections = { work, insights };

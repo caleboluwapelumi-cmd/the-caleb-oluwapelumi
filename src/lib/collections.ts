@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { workCategoryLabels } from '../data/taxonomy';
+import { insightTagLabels, workCategoryLabels } from '../data/taxonomy';
 import type { Props as WorkCardProps } from '../components/ui/WorkCard.astro';
+import type { Props as InsightCardProps } from '../components/ui/InsightCard.astro';
 
 /** Drafts are visible in dev and filtered out of production builds. */
 const isPublished = ({ data }: { data: { draft: boolean } }) =>
@@ -26,6 +27,40 @@ export function toWorkCard(entry: WorkEntry, headingLevel: 'h2' | 'h3' = 'h3'): 
     coverAlt: data.coverAlt,
     client: data.client ?? data.clientDescriptor,
     year: data.year,
+    headingLevel,
+  };
+}
+
+export type InsightEntry = CollectionEntry<'insights'>;
+
+/** Newest first. */
+export async function getPublishedInsights(): Promise<InsightEntry[]> {
+  const entries = await getCollection('insights', isPublished);
+  return entries.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+}
+
+export const insightHref = (entry: InsightEntry) => `/insights/${entry.id}`;
+
+const WORDS_PER_MINUTE = 230;
+
+/** Computed from the raw markdown at build time; never less than a minute. */
+export function readingMinutes(body: string | undefined): number {
+  const words = (body ?? '').split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
+}
+
+export function toInsightCard(
+  entry: InsightEntry,
+  headingLevel: 'h2' | 'h3' = 'h3',
+): InsightCardProps {
+  const { data } = entry;
+  return {
+    href: insightHref(entry),
+    title: data.title,
+    description: data.description,
+    publishDate: data.publishDate,
+    readingMinutes: readingMinutes(entry.body),
+    tagLabels: data.tags.map((tag) => insightTagLabels[tag]),
     headingLevel,
   };
 }
