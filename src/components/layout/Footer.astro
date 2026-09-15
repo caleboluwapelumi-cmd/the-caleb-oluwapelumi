@@ -1,0 +1,114 @@
+---
+import { site } from '../../data/site';
+import { isCurrent } from '../../lib/nav';
+
+const pathname = Astro.url.pathname;
+// Build-time year: the site is prerendered, so this refreshes on each deploy.
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" data-site-footer>
+  <div class="footer-inner">
+    <div class="footer-columns">
+      {/* TODO(copy): footer column headings ("Services", "Site", "Contact"). */}
+      <section aria-labelledby="footer-services">
+        <h2 id="footer-services">Services</h2>
+        {/* TODO(copy): individual service links, from src/data/services.ts once it exists. */}
+        <ul role="list">
+          <li><a href="/services">All services</a></li>
+        </ul>
+      </section>
+
+      <nav aria-labelledby="footer-site">
+        <h2 id="footer-site">Site</h2>
+        <ul role="list">
+          {
+            site.nav.map((item) => (
+              <li>
+                <a href={item.href} aria-current={isCurrent(pathname, item.href) ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <section aria-labelledby="footer-contact">
+        <h2 id="footer-contact">Contact</h2>
+        <ul role="list">
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={site.linkedin} rel="me noopener">LinkedIn</a></li>
+          <li><a href={`https://wa.me/${site.whatsapp}`} rel="noopener">WhatsApp</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <p class="copyright">
+      <small>&copy; {year} {site.name}</small>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-rule);
+    background-color: var(--color-paper-alt);
+  }
+
+  .footer-inner {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 3.5rem 1.25rem 2rem;
+  }
+
+  .footer-columns {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  @media (width >= 40rem) {
+    .footer-columns {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+
+  h2 {
+    margin-bottom: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-decoration-line: none;
+  }
+
+  a[aria-current='page'] {
+    text-decoration-line: underline;
+  }
+
+  @media (hover: hover) {
+    a:hover {
+      text-decoration-line: underline;
+    }
+  }
+
+  .copyright {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-rule);
+    color: var(--color-ink-muted);
+  }
+</style>

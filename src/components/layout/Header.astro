@@ -1,0 +1,176 @@
+---
+import Button from '../ui/Button.astro';
+import MobileNav from './MobileNav.astro';
+import { site } from '../../data/site';
+import { isCurrent } from '../../lib/nav';
+
+const pathname = Astro.url.pathname;
+---
+
+{/* Scroll-state sentinel: once it leaves the viewport the header compacts. */}
+<div class="header-sentinel" data-header-sentinel aria-hidden="true"></div>
+
+<header class="site-header" data-site-header>
+  <div class="bar">
+    <a href="/" class="wordmark" aria-current={isCurrent(pathname, '/') ? 'page' : undefined}>
+      {site.name}
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary" data-primary-nav>
+      <ul role="list">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(pathname, item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header-cta" data-header-cta>
+      <Button href="/contact" variant="primary">Let’s Talk</Button>
+    </div>
+
+    <MobileNav pathname={pathname} />
+  </div>
+</header>
+
+<script>
+  let observer: IntersectionObserver | null = null;
+
+  function initHeader() {
+    observer?.disconnect();
+    observer = null;
+
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    const sentinel = document.querySelector<HTMLElement>('[data-header-sentinel]');
+    if (!header || !sentinel || !('IntersectionObserver' in window)) return;
+
+    observer = new IntersectionObserver(([entry]) => {
+      header.toggleAttribute('data-scrolled', !entry.isIntersecting);
+    });
+    observer.observe(sentinel);
+  }
+
+  // Fires on first load and after every view-transition navigation.
+  document.addEventListener('astro:page-load', initHeader);
+</script>
+
+<style>
+  .header-sentinel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 3rem;
+    pointer-events: none;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--color-paper);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color var(--dur-base) var(--ease-out-expo),
+      margin-bottom var(--dur-base) var(--ease-out-expo);
+  }
+
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 1.25rem 1.25rem;
+    transition: padding-block var(--dur-base) var(--ease-out-expo);
+  }
+
+  /*
+   * Compact state. Padding shrinks by 1.5rem in total and margin-bottom grows
+   * by the same 1.5rem on the same curve, so the header's footprint in the
+   * document never changes. Without that, the page below would jump, scroll
+   * anchoring would move the scroll position, and the sentinel could flip
+   * the state straight back — a flicker loop.
+   */
+  .site-header[data-scrolled] {
+    margin-bottom: 1.5rem;
+    border-bottom-color: var(--color-rule);
+  }
+
+  .site-header[data-scrolled] .bar {
+    padding-block: 0.5rem;
+  }
+
+  .wordmark {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    margin-right: auto;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .primary-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .primary-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.5rem;
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--color-ink);
+    text-decoration-line: none;
+  }
+
+  .primary-nav a[aria-current='page'] {
+    text-decoration-line: underline;
+  }
+
+  @media (hover: hover) {
+    .primary-nav a:hover {
+      text-decoration-line: underline;
+    }
+  }
+
+  /* Under 768px the overlay menu takes over. */
+  .primary-nav,
+  .header-cta {
+    display: none;
+  }
+
+  @media (width >= 48rem) {
+    .primary-nav {
+      display: block;
+    }
+
+    .header-cta {
+      display: flex;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .wordmark {
+      font-size: var(--text-h3);
+    }
+
+    .primary-nav a {
+      padding-inline: 0.75rem;
+    }
+  }
+</style>

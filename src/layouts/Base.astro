@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { site } from '../data/site';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const documentTitle = title ? `${title} · ${site.name}` : site.name;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/* Step 4 replaces the title, description and robots tags below with <Seo />. */}
+    <title>{documentTitle}</title>
+    {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <ClientRouter />
+    {/* Without JS the menu toggle can't open anything, so small screens fall
+        back to the inline nav and CTA, wrapping under the wordmark. */}
+    <noscript>
+      <style>
+        [data-menu-toggle] { display: none !important; }
+        [data-primary-nav] { display: block !important; }
+        [data-header-cta] { display: flex !important; }
+        [data-site-header] { position: relative !important; }
+      </style>
+    </noscript>
+    <slot name="head" />
+  </head>
+  <body>
+    {/* TODO(copy): skip link label. */}
+    <a href="#main" class="skip-link" data-skip-link>Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  /* Keeps anchor targets, including the skip link's, clear of the sticky header. */
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #main {
+    flex: 1;
+  }
+</style>
+
+<style>
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    font-size: var(--text-small);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus-visible {
+    transform: none;
+  }
+</style>

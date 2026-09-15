@@ -1,0 +1,231 @@
+---
+import Button from '../ui/Button.astro';
+import { site } from '../../data/site';
+import { isCurrent } from '../../lib/nav';
+
+export interface Props {
+  pathname: string;
+}
+
+const { pathname } = Astro.props;
+---
+
+{/* TODO(copy): "Menu" accessible label. */}
+<button
+  type="button"
+  class="menu-toggle"
+  aria-expanded="false"
+  aria-controls="mobile-menu"
+  data-menu-toggle
+>
+  <span class="sr-only">Menu</span>
+  <svg class="icon icon-open" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+    <path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+  </svg>
+  <svg class="icon icon-close" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+  </svg>
+</button>
+
+<div id="mobile-menu" class="menu-panel" data-menu-panel hidden>
+  <nav aria-label="Primary">
+    <ul role="list">
+      {
+        site.nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isCurrent(pathname, item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="menu-cta">
+    <Button href="/contact" variant="primary">Let’s Talk</Button>
+  </div>
+</div>
+
+<script>
+  const DESKTOP_QUERY = '(width >= 48rem)';
+
+  // One controller per page: aborting it detaches every listener from the
+  // previous page before view transitions swap in a new header.
+  let controller: AbortController | null = null;
+
+  function initMobileNav() {
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
+    if (!header || !toggle || !panel) return;
+
+    const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
+    // Everything outside the header. `inert` removes it from the tab order and
+    // the accessibility tree, so screen-reader virtual cursors can't escape
+    // the menu either — the Tab wrap below only covers keyboard users.
+    const background = () =>
+      document.querySelectorAll<HTMLElement>('[data-skip-link], #main, [data-site-footer]');
+
+    // Visible focusables only: the desktop nav and CTA are display:none here.
+    const focusables = () =>
+      [...header.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')].filter(
+        (el) => el.getClientRects().length > 0,
+      );
+
+    function open() {
+      toggle!.setAttribute('aria-expanded', 'true');
+      panel!.hidden = false;
+      document.documentElement.setAttribute('data-menu-open', '');
+      background().forEach((el) => (el.inert = true));
+    }
+
+    function close({ restoreFocus }: { restoreFocus: boolean }) {
+      toggle!.setAttribute('aria-expanded', 'false');
+      panel!.hidden = true;
+      document.documentElement.removeAttribute('data-menu-open');
+      background().forEach((el) => (el.inert = false));
+      if (restoreFocus) toggle!.focus();
+    }
+
+    toggle.addEventListener(
+      'click',
+      () => (isOpen() ? close({ restoreFocus: true }) : open()),
+      { signal },
+    );
+
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        if (!isOpen()) return;
+
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          close({ restoreFocus: true });
+          return;
+        }
+
+        if (event.key !== 'Tab') return;
+        const items = focusables();
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        const active = document.activeElement;
+        const inside = active instanceof HTMLElement && items.includes(active);
+
+        if (event.shiftKey && (active === first || !inside)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && (active === last || !inside)) {
+          event.preventDefault();
+          first.focus();
+        }
+      },
+      { signal },
+    );
+
+    // Widening past the breakpoint hides the toggle; leaving the menu "open"
+    // would keep the page inert and scroll-locked with no visible way out.
+    window.matchMedia(DESKTOP_QUERY).addEventListener(
+      'change',
+      (event) => {
+        if (event.matches && isOpen()) close({ restoreFocus: false });
+      },
+      { signal },
+    );
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        if (isOpen()) close({ restoreFocus: false });
+      },
+      { signal },
+    );
+  }
+
+  document.addEventListener('astro:page-load', initMobileNav);
+</script>
+
+<style is:global>
+  html[data-menu-open] {
+    overflow: hidden;
+  }
+</style>
+
+<style>
+  .menu-toggle {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.375rem;
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  .icon-close,
+  .menu-toggle[aria-expanded='true'] .icon-open {
+    display: none;
+  }
+
+  .menu-toggle[aria-expanded='true'] .icon-close {
+    display: block;
+  }
+
+  /* Sits under the header's wordmark and toggle (z-index 1), which stay
+     usable while it's open. */
+  .menu-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 6rem 1.25rem 2.5rem;
+    background-color: var(--color-paper);
+  }
+
+  .menu-panel:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .menu-panel ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .menu-panel a:not(.btn) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    line-height: 1.2;
+    color: var(--color-ink);
+    text-decoration-line: none;
+  }
+
+  .menu-panel a:not(.btn)[aria-current='page'] {
+    text-decoration-line: underline;
+  }
+
+  @media (width >= 48rem) {
+    .menu-toggle,
+    .menu-panel {
+      display: none;
+    }
+
+    .menu-panel:not([hidden]) {
+      display: none;
+    }
+  }
+</style>

@@ -73,6 +73,7 @@ No UI kits, no animation libraries, no utility grab-bags.
 ## Known deviations
 
 - **`vite` override pinned to `^6.4.3`** in `package.json` `overrides`, to dedupe against `@tailwindcss/vite`'s Vite 8. REMOVE when Astro's own Vite dependency reaches 8.x.
+- **Staying on Astro 5.18.2.** Evaluated moving to Astro 6 on 2026-09-15. Staying on 5.18.2: the Vercel adapter for Astro 6 (10.0.0) and Astro 6's own content-collection API are both outside your trained knowledge (Astro 6 shipped after your cutoff), which is a real cost across ten more build steps of original code, not a one-time migration cost. The vite override's removal condition doesn't change — Astro 6 also runs on Vite 7, not 8. Revisit this decision only at a deliberate major refresh, not mid-build.
 - **`@astrojs/check` and `typescript` added as devDependencies.** Required by `npx astro check`; dev-only, zero bundle impact.
 
 ## Definition of done, per step

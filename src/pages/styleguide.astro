@@ -6,7 +6,7 @@
  * Token values and contrast ratios are read from the stylesheets at build
  * time, so this page can never disagree with the real @theme block.
  */
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
 import themeCss from '../styles/global.css?raw';
 import Button from '../components/ui/Button.astro';
 import Tag from '../components/ui/Tag.astro';
@@ -102,16 +102,8 @@ const buttonVariants = ['primary', 'secondary', 'ghost'] as const;
 const tagVariants = ['neutral', 'accent'] as const;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Styleguide · Caleb Oluwapelumi</title>
-  </head>
-  <body>
-    <main class="sg">
+<Base title="Styleguide" noindex>
+    <div class="sg">
       <header class="sg-section">
         <p class="sg-eyebrow">Dev tool · noindex</p>
         <h1>Styleguide</h1>
@@ -360,9 +352,8 @@ const tagVariants = ['neutral', 'accent'] as const;
           </blockquote>
         </div>
       </section>
-    </main>
-  </body>
-</html>
+    </div>
+</Base>
 
 <style>
   .sg {
