@@ -1,0 +1,27 @@
+---
+// Where a native (no-JS) form post lands on failure — including the expected
+// case of JS being off, since Turnstile can't issue a token without it.
+import Page from '../../layouts/Page.astro';
+import Button from '../../components/ui/Button.astro';
+import { site } from '../../data/site';
+---
+
+{/* TODO(copy): failure heading and body. */}
+<Page title="Message not sent" noindex>
+  <p slot="lede">TODO(copy): the message didn't go through — use one of these instead</p>
+  <div class="actions">
+    <Button href={`mailto:${site.email}`} variant="primary">Email {site.email}</Button>
+    <Button href={`https://wa.me/${site.whatsapp}`} variant="secondary" rel="noopener">
+      Message on WhatsApp
+    </Button>
+    <Button href="/contact" variant="ghost">Back to the form</Button>
+  </div>
+</Page>
+
+<style>
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

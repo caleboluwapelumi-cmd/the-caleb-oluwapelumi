@@ -1,0 +1,341 @@
+---
+import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
+import Page from '../layouts/Page.astro';
+import Button from '../components/ui/Button.astro';
+import { site } from '../data/site';
+import { HONEYPOT_FIELD, budgetOptions, serviceOptions } from '../lib/schema';
+
+const calUrl = `https://cal.com/${site.calLink}`;
+// TODO(copy): WhatsApp prefilled opener.
+const whatsappOpener = 'TODO(copy): WhatsApp opener message';
+const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(whatsappOpener)}`;
+---
+
+{/* TODO(copy): page heading, meta description and every label below. */}
+<Page title="Contact" heading="Let’s Talk" description="TODO(copy): contact page meta description">
+  <p slot="lede">TODO(copy): contact intro — booking first, form second, direct lines third</p>
+
+  <div class="contact" data-contact>
+    <section
+      id="book"
+      class="panel book"
+      aria-labelledby="book-title"
+      data-cal-panel
+      data-cal-link={site.calLink}
+      data-cal-title="Book a Strategy Session calendar"
+    >
+      <h2 id="book-title">Book a Strategy Session</h2>
+      <p class="measure">TODO(copy): what the session is, how long it takes, who it's for</p>
+      <div class="book-actions">
+        {/* A real link: with JS off, or before Cal loads, this still books. */}
+        <Button href={calUrl} variant="primary" rel="noopener">
+          Open the booking page<span class="sr-only"> (cal.com)</span>
+        </Button>
+        <Button type="button" variant="secondary" data-cal-show hidden>Show calendar</Button>
+      </div>
+      <div class="cal-embed" data-cal-embed hidden></div>
+    </section>
+
+    <section class="panel" aria-labelledby="form-title">
+      <h2 id="form-title">Send a message</h2>
+
+      <noscript>
+        <p class="notice">
+          TODO(copy): the form's spam check needs JavaScript — email
+          <a href={`mailto:${site.email}`}>{site.email}</a> instead
+        </p>
+      </noscript>
+
+      <form
+        action="/api/contact"
+        method="POST"
+        class="form"
+        novalidate
+        data-contact-form
+      >
+        <div class="field" data-field="name">
+          <label for="contact-name">Name</label>
+          <input
+            id="contact-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required
+            maxlength="100"
+            aria-describedby="contact-name-error"
+          />
+          <p id="contact-name-error" class="field-error" data-error hidden></p>
+        </div>
+
+        <div class="field" data-field="email">
+          <label for="contact-email">Email</label>
+          <input
+            id="contact-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            maxlength="254"
+            aria-describedby="contact-email-error"
+          />
+          <p id="contact-email-error" class="field-error" data-error hidden></p>
+        </div>
+
+        <div class="field" data-field="business">
+          <label for="contact-business">Business name <span class="optional">(optional)</span></label>
+          <input
+            id="contact-business"
+            name="business"
+            type="text"
+            autocomplete="organization"
+            maxlength="150"
+            aria-describedby="contact-business-error"
+          />
+          <p id="contact-business-error" class="field-error" data-error hidden></p>
+        </div>
+
+        <div class="field-row">
+          <div class="field" data-field="service">
+            <label for="contact-service">What do you need?</label>
+            <select id="contact-service" name="service" required aria-describedby="contact-service-error">
+              <option value="">Choose one</option>
+              {serviceOptions.map((o) => <option value={o.value}>{o.label}</option>)}
+            </select>
+            <p id="contact-service-error" class="field-error" data-error hidden></p>
+          </div>
+
+          <div class="field" data-field="budget">
+            <label for="contact-budget">Budget</label>
+            <select id="contact-budget" name="budget" required aria-describedby="contact-budget-error">
+              <option value="">Choose a range</option>
+              {budgetOptions.map((o) => <option value={o.value}>{o.label}</option>)}
+            </select>
+            <p id="contact-budget-error" class="field-error" data-error hidden></p>
+          </div>
+        </div>
+
+        <div class="field" data-field="message">
+          <label for="contact-message">Message</label>
+          <textarea
+            id="contact-message"
+            name="message"
+            rows="6"
+            required
+            maxlength="5000"
+            aria-describedby="contact-message-error"></textarea>
+          <p id="contact-message-error" class="field-error" data-error hidden></p>
+        </div>
+
+        {/* Honeypot: off-screen, out of the tab order, ignored by autofill. */}
+        <div class="hp" aria-hidden="true">
+          <label for={HONEYPOT_FIELD}>Leave this field empty</label>
+          <input id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        {
+          PUBLIC_TURNSTILE_SITE_KEY ? (
+            <div class="turnstile" data-turnstile data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} />
+          ) : (
+            <p class="notice">TODO: set PUBLIC_TURNSTILE_SITE_KEY — the form can’t be submitted without it.</p>
+          )
+        }
+        <p class="field-error" data-verify-error role="alert" hidden>
+          Please complete the verification check, then send again.
+        </p>
+
+        <div class="submit">
+          <Button
+            type="submit"
+            variant="primary"
+            data-submit
+            data-idle-label="Send message"
+            data-pending-label="Sending…"
+          >
+            <span data-submit-label>Send message</span>
+          </Button>
+        </div>
+      </form>
+
+      <div class="result" data-form-success hidden>
+        <h3 tabindex="-1">Message sent</h3>
+        <p class="measure">TODO(copy): what happens next, and by when</p>
+      </div>
+
+      <div class="result result--failure" data-form-failure hidden>
+        <h3 tabindex="-1">That didn’t send</h3>
+        <p class="measure">
+          TODO(copy): retry prompt — or email <a href={`mailto:${site.email}`}>{site.email}</a> directly
+        </p>
+      </div>
+    </section>
+
+    <section class="panel direct" aria-labelledby="direct-title">
+      <h2 id="direct-title">Other ways to reach me</h2>
+      <div class="direct-actions">
+        <Button href={whatsappUrl} variant="secondary" rel="noopener">Message on WhatsApp</Button>
+        <Button href={`mailto:${site.email}`} variant="ghost">{site.email}</Button>
+      </div>
+    </section>
+  </div>
+</Page>
+
+<script>
+  import { initContactForm } from '../lib/contact-form';
+  import { initCalEmbed } from '../lib/cal-embed';
+
+  document.addEventListener('astro:page-load', () => {
+    initCalEmbed();
+    initContactForm();
+  });
+</script>
+
+<style>
+  .contact {
+    display: grid;
+    gap: clamp(3rem, 2.5rem + 2vw, 4.5rem);
+    max-width: 48rem;
+  }
+
+  .panel h2 {
+    font-size: var(--text-h2);
+  }
+
+  .panel > p {
+    margin-top: 1rem;
+  }
+
+  .book {
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border: 1px solid var(--color-rule);
+    border-top: 3px solid var(--color-accent);
+    border-radius: 0.5rem;
+  }
+
+  .book-actions,
+  .direct-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .cal-embed {
+    min-height: 40rem;
+    margin-top: 1.5rem;
+    overflow: auto;
+  }
+
+  .form {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.375rem;
+    min-width: 0;
+  }
+
+  .field-row {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (width >= 40rem) {
+    .field-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  label {
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .optional {
+    font-weight: 400;
+    color: var(--color-ink-muted);
+  }
+
+  /* Borders use ink-muted: form control boundaries need 3:1, and the
+     rule colour doesn't get there on paper. */
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--color-ink-muted);
+    border-radius: 0.375rem;
+    background-color: var(--color-white);
+    font: inherit;
+    color: var(--color-ink);
+    transition: border-color var(--dur-fast) var(--ease-out-expo);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input[aria-invalid='true'],
+  select[aria-invalid='true'],
+  textarea[aria-invalid='true'] {
+    border-color: var(--color-accent-ink);
+    border-width: 2px;
+  }
+
+  @media (hover: hover) {
+    input:hover,
+    select:hover,
+    textarea:hover {
+      border-color: var(--color-ink);
+    }
+  }
+
+  .field-error {
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--color-accent-ink);
+  }
+
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .turnstile {
+    min-height: 4.125rem;
+  }
+
+  .notice {
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--color-accent);
+    background-color: var(--color-accent-wash);
+    font-size: var(--text-small);
+    color: var(--color-ink);
+  }
+
+  .submit {
+    margin-top: 0.5rem;
+  }
+
+  .result {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border-left: 3px solid var(--color-ink);
+    background-color: var(--color-paper-alt);
+  }
+
+  .result--failure {
+    border-left-color: var(--color-accent);
+  }
+
+  .result p {
+    margin-top: 0.5rem;
+  }
+</style>

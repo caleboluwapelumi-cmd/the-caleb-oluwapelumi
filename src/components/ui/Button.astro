@@ -15,6 +15,11 @@ export type Props = (AnchorProps | NativeButtonProps) & {
 
 const { variant = 'primary', class: className, ...rest } = Astro.props;
 const classes = ['btn', `btn--${variant}`, className];
+
+// Pulled out of the spread: a hardcoded type= before {...rest} would emit a
+// duplicate attribute, and the parser keeps the first — which silently turned
+// every type="submit" into an inert button.
+const { type: buttonType = 'button', ...buttonRest } = rest as NativeButtonProps;
 ---
 
 {
@@ -23,7 +28,7 @@ const classes = ['btn', `btn--${variant}`, className];
       <slot />
     </a>
   ) : (
-    <button class:list={classes} type="button" {...(rest as NativeButtonProps)}>
+    <button class:list={classes} type={buttonType} {...buttonRest}>
       <slot />
     </button>
   )

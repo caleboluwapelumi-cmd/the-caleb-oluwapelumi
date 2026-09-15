@@ -12,6 +12,8 @@ export interface SiteConfig {
   /** International format, digits only, no "+" — used to build wa.me links. */
   whatsapp: string;
   baseUrl: string;
+  /** Cal.com booking path, e.g. "username/strategy-session". */
+  calLink: string;
   nav: readonly NavItem[];
 }
 
@@ -27,6 +29,8 @@ export const site = {
   whatsapp: 'TODO-WHATSAPP',
   // TODO: must match `site` in astro.config.mjs once the domain is known.
   baseUrl: 'https://TODO-DOMAIN.com',
+  // TODO: Cal.com username/event path not yet supplied.
+  calLink: 'TODO-CAL-LINK',
   nav: [
     { label: 'Work', href: '/work' },
     { label: 'Services', href: '/services' },
