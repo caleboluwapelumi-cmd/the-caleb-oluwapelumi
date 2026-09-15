@@ -2,23 +2,20 @@
 import Page from '../layouts/Page.astro';
 import Button from '../components/ui/Button.astro';
 import Reveal from '../components/ui/Reveal.astro';
-import { pricing, formatAmount, PRICING_NOTE } from '../data/pricing';
+import { pricing, formatAmount, PRICING_CLOSING } from '../data/pricing';
 import { getService } from '../data/services';
 ---
 
 {/* TODO(copy): meta description for the pricing page. */}
 <Page title="Pricing" description="TODO(copy): pricing page meta description">
-  <Fragment slot="lede">
-    <p>
-      Every project is different, so pricing depends on scope, complexity, and requirements. These
-      packages are a starting point.
-    </p>
-    <p class="note">{PRICING_NOTE}</p>
-  </Fragment>
+  <p slot="lede">
+    Every project is different, so pricing depends on scope, complexity, and requirements. These
+    packages are a starting point.
+  </p>
 
   <div class="pricing">
     {
-      pricing.map(({ service: slug, tiers }) => {
+      pricing.map(({ service: slug, tiers, note }) => {
         const service = getService(slug);
         return (
           <section id={slug} class="service" aria-labelledby={`${slug}-title`}>
@@ -31,16 +28,7 @@ import { getService } from '../data/services';
                     {tier.from && <span class="from">From</span>}
                     <span class="amount">{formatAmount(tier.usd)}</span>
                   </p>
-                  <p class="who">{tier.whoItsFor}</p>
-                  <ul class="includes">
-                    {tier.includes.map((item) => (
-                      <li>{item}</li>
-                    ))}
-                  </ul>
-                  <p class="turnaround">
-                    {/* TODO(copy): turnaround label. */}
-                    <span class="eyebrow">Turnaround</span> {tier.turnaround}
-                  </p>
+                  {tier.detail && <p class="detail">{tier.detail}</p>}
                   <div class="tier-cta">
                     {/* TODO(copy): CTA label. */}
                     <Button href={`/contact?service=${slug}`} variant="secondary">
@@ -50,12 +38,15 @@ import { getService } from '../data/services';
                 </li>
               ))}
             </Reveal>
+            {note && <p class="note">{note}</p>}
           </section>
         );
       })
     }
 
-    {/* Consultation-led offers (strategy, positioning) have no price card; they route here. */}
+    <p class="closing">{PRICING_CLOSING}</p>
+
+    {/* Strategy, positioning and content strategy have no price card — they route here. */}
     <section class="unsure" aria-labelledby="unsure-title">
       <Reveal class="unsure-card">
         {/* TODO(copy): "Not sure what you need?" card body and CTA label. */}
@@ -70,11 +61,6 @@ import { getService } from '../data/services';
 </Page>
 
 <style>
-  /* Sits on paper, so accent-ink rather than bare accent. */
-  .note {
-    color: var(--color-accent-ink);
-  }
-
   .service + .service {
     margin-top: clamp(3.5rem, 3rem + 2vw, 5rem);
   }
@@ -90,14 +76,14 @@ import { getService } from '../data/services';
 
   @media (width >= 48rem) {
     .tiers {
-      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     }
   }
 
   .tier {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
     height: 100%;
     padding: 1.5rem;
     border: 1px solid var(--color-rule);
@@ -123,25 +109,9 @@ import { getService } from '../data/services';
     color: var(--color-ink);
   }
 
-  .includes {
-    padding-left: 1.25rem;
-    list-style: disc;
-  }
-
-  .includes li + li {
-    margin-top: 0.375rem;
-  }
-
-  .includes li::marker {
-    color: var(--color-accent-ink);
-  }
-
-  .turnaround {
+  .detail {
     font-size: var(--text-small);
-  }
-
-  .turnaround .eyebrow {
-    margin-right: 0.25rem;
+    color: var(--color-ink-body);
   }
 
   .tier-cta {
@@ -149,8 +119,27 @@ import { getService } from '../data/services';
     padding-top: 0.5rem;
   }
 
+  /* Sits on paper, so accent-ink rather than bare accent. */
+  .note {
+    margin-top: 1rem;
+    padding-left: 0.875rem;
+    border-left: 3px solid var(--color-accent);
+    font-size: var(--text-small);
+    color: var(--color-accent-ink);
+  }
+
+  .closing {
+    max-width: 68ch;
+    margin-top: clamp(3rem, 2.5rem + 2vw, 4rem);
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: 1.25;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
   .unsure {
-    margin-top: clamp(3.5rem, 3rem + 2vw, 5rem);
+    margin-top: clamp(3rem, 2.5rem + 2vw, 4rem);
   }
 
   .unsure-card {

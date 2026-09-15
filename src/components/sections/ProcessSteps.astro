@@ -2,20 +2,30 @@
 import SectionHeader from '../ui/SectionHeader.astro';
 import Reveal from '../ui/Reveal.astro';
 
-// TODO(copy): the four steps of how Caleb works.
 const steps = [
-  { title: 'TODO(copy): step name', body: 'TODO(copy): what happens in this step' },
-  { title: 'TODO(copy): step name', body: 'TODO(copy): what happens in this step' },
-  { title: 'TODO(copy): step name', body: 'TODO(copy): what happens in this step' },
-  { title: 'TODO(copy): step name', body: 'TODO(copy): what happens in this step' },
+  {
+    title: 'Understand',
+    body: 'I start by understanding your business, audience, goals, and the problem you need solved.',
+  },
+  {
+    title: 'Strategise',
+    body: 'I identify the right approach, priorities, and opportunities before jumping into execution.',
+  },
+  {
+    title: 'Execute',
+    body: 'I turn the strategy into the actual work, whether that means a campaign, website, content, or digital solution.',
+  },
+  {
+    title: 'Improve',
+    body: 'Good work can always get better. I review what is working, identify what isn’t, and make the necessary adjustments.',
+  },
 ];
 ---
 
 <section class="section section--alt" aria-labelledby="process-title">
   <div class="shell">
     <Reveal>
-      {/* TODO(copy): section eyebrow and heading. */}
-      <SectionHeader id="process-title" eyebrow="How I work" title="TODO(copy): process heading" />
+      <SectionHeader id="process-title" eyebrow="How I work" title="Simple. Clear. Practical." />
     </Reveal>
 
     <Reveal as="ol" stagger class="steps" role="list">

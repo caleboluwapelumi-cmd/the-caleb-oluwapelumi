@@ -22,8 +22,7 @@ const options = workCategories
   {
     entries.length > 0 ? (
       <div data-filter-root data-filter-param="category">
-        {/* TODO(copy): filter group label. */}
-        {options.length > 1 && <FilterBar label="Filter case studies by category" options={options} />}
+        {options.length > 1 && <FilterBar label="Filter by category" options={options} />}
         <ul class="grid" role="list">
           {entries.map((entry) => (
             <li data-filter-values={entry.data.category}>

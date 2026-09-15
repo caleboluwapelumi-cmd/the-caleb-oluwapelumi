@@ -2,44 +2,44 @@
 import SectionHeader from '../ui/SectionHeader.astro';
 import Reveal from '../ui/Reveal.astro';
 
-// TODO(copy): reasons to hire Caleb. Each claim needs proof beside it, or cut it.
-const reasons = [
-  { title: 'TODO(copy): reason', body: 'TODO(copy): supporting detail and proof' },
-  { title: 'TODO(copy): reason', body: 'TODO(copy): supporting detail and proof' },
-  { title: 'TODO(copy): reason', body: 'TODO(copy): supporting detail and proof' },
+// The brief's three-line closer. Three statements, not three claims needing
+// proof beside them — so they render as a list, not as titled cards.
+const closer = [
+  'Strategy that makes sense.',
+  'Creative work that communicates.',
+  'Digital solutions that work.',
 ];
 ---
 
 <section class="section" aria-labelledby="why-title">
   <div class="shell">
     <Reveal>
-      {/* TODO(copy): section eyebrow and heading. */}
-      <SectionHeader id="why-title" eyebrow="Why work with me" title="TODO(copy): why-Caleb heading">
-        <p>TODO(copy): why-Caleb intro, in the About section's voice</p>
+      <SectionHeader
+        id="why-title"
+        eyebrow="Why work with me"
+        title="You don’t always need more ideas. You need the right execution."
+      >
+        <p>
+          I bring together marketing, sales, creativity, technology, and problem solving to approach
+          business challenges from both a strategic and practical perspective.
+        </p>
       </SectionHeader>
     </Reveal>
 
-    <Reveal as="ul" stagger class="reasons" role="list">
-      {
-        reasons.map((reason) => (
-          <li>
-            <h3>{reason.title}</h3>
-            <p>{reason.body}</p>
-          </li>
-        ))
-      }
+    <Reveal as="ul" stagger class="closer" role="list">
+      {closer.map((line) => <li>{line}</li>)}
     </Reveal>
   </div>
 </section>
 
 <style>
-  .reasons {
+  .closer {
     display: grid;
     gap: 2rem;
   }
 
   @media (width >= 48rem) {
-    .reasons {
+    .closer {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
@@ -47,9 +47,10 @@ const reasons = [
   li {
     padding-top: 1.25rem;
     border-top: 3px solid var(--color-accent);
-  }
-
-  p {
-    margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: 1.25;
+    color: var(--color-ink);
+    text-wrap: balance;
   }
 </style>

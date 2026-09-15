@@ -7,7 +7,7 @@ services:
 # TODO(photo): real project visual — this is the marked placeholder cover.
 cover: ../../assets/work/placeholder-cover.svg
 coverAlt: "Placeholder graphic standing in for the project's screenshot."
-year: 2025 # TODO(copy): confirm the real project year
+year: 2026 # TODO(copy): confirm the real project year
 featured: true
 order: 3
 draft: false

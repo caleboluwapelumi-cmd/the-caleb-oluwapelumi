@@ -17,8 +17,12 @@ const { items } = Astro.props;
     <section class="section section--alt" aria-labelledby="insights-title">
       <div class="shell">
         <Reveal>
-          {/* TODO(copy): section eyebrow and heading. */}
-          <SectionHeader id="insights-title" eyebrow="Insights" title="TODO(copy): insights heading" />
+          <SectionHeader id="insights-title" eyebrow="Insights" title="Ideas, Experiments & Lessons">
+            <p>
+              I share practical thoughts on technology, digital marketing, business, and the lessons
+              that come from actually building things.
+            </p>
+          </SectionHeader>
         </Reveal>
 
         <Reveal as="ul" stagger class="grid" role="list">
@@ -30,8 +34,7 @@ const { items } = Astro.props;
         </Reveal>
 
         <div class="more">
-          {/* TODO(copy): link label. */}
-          <Button href="/insights" variant="ghost">All insights</Button>
+          <Button href="/insights" variant="ghost">Read All Insights</Button>
         </div>
       </div>
     </section>

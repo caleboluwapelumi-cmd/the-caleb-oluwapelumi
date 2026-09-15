@@ -1,11 +1,9 @@
 ---
-# Title is Caleb's; the body paragraph was never supplied, so this stays a draft
-# rather than publishing an empty post. Set draft: false once the body lands.
 title: "Why Businesses Should Stop Treating Digital Tools as the Strategy"
-description: "TODO(copy): one-sentence description, under 160 characters."
-publishDate: 2026-09-16 # TODO(copy): real publish date
+description: "Technology can make a business faster, but it doesn’t fix a poorly defined problem. Start with what the business needs, then choose the right tool to solve it."
+publishDate: 2026-09-16 # TODO(copy): confirm the real publish date
 tags: ["digital", "technology"]
-draft: true
+draft: false
 ---
 
-TODO(copy): Caleb's paragraph for this post, verbatim.
+Technology can make a business faster, but it doesn’t fix a poorly defined problem. Start with what the business needs, then choose the right tool to solve it.

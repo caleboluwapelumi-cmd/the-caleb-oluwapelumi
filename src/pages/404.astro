@@ -3,13 +3,12 @@ import Page from '../layouts/Page.astro';
 import Button from '../components/ui/Button.astro';
 ---
 
-{/* TODO(copy): 404 heading and body, in the site's voice. */}
-<Page title="Page not found" heading="TODO(copy): 404 heading" noindex>
-  <p slot="lede">TODO(copy): 404 body — say what happened and point somewhere useful</p>
+<Page title="Page not found" noindex>
+  <p slot="lede">That page doesn’t exist — try one of these instead.</p>
   <div class="actions">
-    <Button href="/work" variant="primary">See the work</Button>
+    <Button href="/work" variant="primary">Work</Button>
     <Button href="/services" variant="secondary">Services</Button>
-    <Button href="/contact" variant="ghost">Get in touch</Button>
+    <Button href="/contact" variant="ghost">Contact</Button>
   </div>
 </Page>
 

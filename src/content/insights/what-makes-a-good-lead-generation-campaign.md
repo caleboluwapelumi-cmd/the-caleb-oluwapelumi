@@ -1,11 +1,11 @@
 ---
-# Title is Caleb's; the body paragraph was never supplied, so this stays a draft
-# rather than publishing an empty post. Set draft: false once the body lands.
 title: "What Makes a Good Lead Generation Campaign"
-description: "TODO(copy): one-sentence description, under 160 characters."
-publishDate: 2026-09-16 # TODO(copy): real publish date
+# Trimmed at the last clause purely to clear the schema's 160-character cap;
+# the full sentence is the body below.
+description: "Getting clicks is easy. Building a campaign that consistently attracts the right prospects requires a clear offer, the right audience, and good creative."
+publishDate: 2026-09-16 # TODO(copy): confirm the real publish date
 tags: ["marketing", "growth"]
-draft: true
+draft: false
 ---
 
-TODO(copy): Caleb's paragraph for this post, verbatim.
+Getting clicks is easy. Building a campaign that consistently attracts the right prospects requires a clear offer, the right audience, good creative, and a system for handling the leads that come in.

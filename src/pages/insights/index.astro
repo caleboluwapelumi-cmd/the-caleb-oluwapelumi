@@ -26,8 +26,8 @@ const options = insightTags
   {
     entries.length > 0 ? (
       <div data-filter-root data-filter-param="tag">
-        {/* TODO(copy): filter group label. */}
-        {options.length > 1 && <FilterBar label="Filter insights by tag" options={options} />}
+        {/* Parallel to /work's "Filter by category", on this page's axis. */}
+        {options.length > 1 && <FilterBar label="Filter by tag" options={options} />}
         <ul class="list" role="list">
           {entries.map((entry) => (
             <li data-filter-values={entry.data.tags.join(' ')}>

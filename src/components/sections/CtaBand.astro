@@ -10,19 +10,23 @@ export interface Props {
   label?: string;
 }
 
-// TODO(copy): default CTA heading, supporting line and button label.
 const {
   id = 'cta-title',
-  title = 'TODO(copy): final CTA heading',
+  title = 'What are you trying to build?',
   href = '/contact',
-  label = 'Let’s Talk',
+  label = 'Start a Conversation',
 } = Astro.props;
 ---
 
 <section class="cta-band" aria-labelledby={id}>
   <Reveal class="shell inner">
     <h2 id={id}>{title}</h2>
-    <p class="measure"><slot>TODO(copy): final CTA supporting line</slot></p>
+    <p class="measure">
+      <slot>
+        Maybe you need a website. Maybe your marketing isn’t working. Maybe you need more leads.
+        Maybe you simply have a business problem you haven’t figured out yet. Let’s talk about it.
+      </slot>
+    </p>
     <div class="actions">
       <Button href={href} variant="primary">{label}</Button>
     </div>
