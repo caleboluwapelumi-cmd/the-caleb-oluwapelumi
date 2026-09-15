@@ -1,0 +1,6 @@
+---
+description: Project conventions
+alwaysApply: true
+---
+Follow the rules in ./CLAUDE.md and the spec in ./BUILD-PLAN.md without exception.
+Work one numbered build step at a time. Do not run ahead.

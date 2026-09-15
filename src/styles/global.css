@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/inter";
+
+@theme {
+  /* Lock the palette: Tailwind's default colours (blue-500 etc.) stop
+     generating, so an off-brand utility produces no CSS instead of shipping. */
+  --color-*: initial;
+
+  /* Re-declared because the lock removes them. transparent, current and
+     inherit are hardcoded utility values in Tailwind 4.3, not --color-* theme
+     vars, so they survive the lock and need no declaration. */
+  --color-white: #fff;
+  --color-black: #000;
+
+  /* Base — warm off-white, not pure white. Pure white on a bright phone
+     screen in daylight is fatiguing and reads cheap. */
+  --color-paper:      #FBFAF7;
+  --color-paper-alt:  #F3F1EC;  /* alternating section bands */
+
+  /* Ink */
+  --color-ink:        #12100E;  /* headings, dark sections */
+  --color-ink-body:   #3A3733;  /* body copy — 11.34:1 on paper (measured) */
+  --color-ink-muted:  #6B6660;  /* captions, meta — 5.45:1 on paper (measured) */
+  --color-rule:       #E2DED6;  /* hairlines, borders */
+
+  /* Accent — two stops, and the distinction matters */
+  --color-accent:     #FF4A1C;  /* 3.22:1 on paper (measured). GRAPHICS AND
+                                   LARGE DISPLAY TEXT ONLY. Never small text. */
+  --color-accent-ink: #CC370F;  /* 4.88:1 on paper (measured). Small text,
+                                   links, button fills. White label on this
+                                   fill is 5.10:1. Thinnest margin is 4.51:1
+                                   on paper-alt — don't lighten it. */
+  --color-accent-wash:#FFF1EC;  /* tinted panels */
+
+  /* Type */
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --font-body:    "Inter Variable", system-ui, -apple-system, sans-serif;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur-base: 420ms;
+  --dur-slow: 800ms;
+
+  /* Type scale — fluid, no breakpoint jumps */
+  --text-display: clamp(2.75rem, 1.6rem + 5.2vw, 6rem);   /* hero */
+  --text-h1:      clamp(2.25rem, 1.5rem + 3.2vw, 4rem);
+  --text-h2:      clamp(1.75rem, 1.3rem + 1.9vw, 2.75rem);
+  --text-h3:      clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --text-body:    clamp(1rem, 0.97rem + 0.16vw, 1.125rem);
+  --text-small:   0.9375rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Reset — Tailwind's preflight covers most of this; these are the gaps.
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  img,
+  picture,
+  video,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Long URLs and unbroken strings must not cause horizontal scroll at 320px. */
+  p,
+  li,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Base elements
+--------------------------------------------------------------------------- */
+@layer base {
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink-body);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  h1 { font-size: var(--text-h1); }
+  h2 { font-size: var(--text-h2); }
+  h3 { font-size: var(--text-h3); line-height: 1.25; }
+  h4, h5, h6 { font-size: var(--text-body); line-height: 1.4; }
+
+  /* Link text stays body ink so prose links sit nowhere near the contrast
+     margin; the accent lives in the underline, which is a graphic. */
+  a {
+    color: var(--color-ink-body);
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color var(--dur-fast) var(--ease-out-expo);
+  }
+
+  a:hover {
+    text-decoration-color: var(--color-accent-ink);
+  }
+
+  small {
+    font-size: var(--text-small);
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Prose — rendered markdown (case studies, insights)
+--------------------------------------------------------------------------- */
+@layer components {
+  .prose {
+    max-width: 68ch;
+    color: var(--color-ink-body);
+    font-size: var(--text-body);
+    line-height: 1.7;
+  }
+
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+
+  .prose :where(h2, h3, h4) {
+    margin-top: 2em;
+  }
+
+  .prose :where(h2, h3, h4) + * {
+    margin-top: 0.75em;
+  }
+
+  .prose :where(ul, ol) {
+    padding-left: 1.5em;
+  }
+
+  .prose ul { list-style: disc; }
+  .prose ol { list-style: decimal; }
+
+  .prose li + li {
+    margin-top: 0.5em;
+  }
+
+  .prose li::marker {
+    color: var(--color-ink-muted);
+  }
+
+  .prose strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .prose blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: 1.25em;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: 1.35;
+    color: var(--color-ink);
+  }
+
+  .prose :where(code) {
+    font-size: 0.9em;
+    background-color: var(--color-paper-alt);
+    padding: 0.1em 0.3em;
+    border-radius: 0.25em;
+  }
+
+  .prose pre {
+    overflow-x: auto;
+    background-color: var(--color-paper-alt);
+    padding: 1em;
+    border-radius: 0.375em;
+  }
+
+  .prose pre code {
+    background: none;
+    padding: 0;
+  }
+
+  .prose figcaption {
+    margin-top: 0.5em;
+    font-size: var(--text-small);
+    color: var(--color-ink-muted);
+  }
+
+  .prose hr {
+    margin-block: 2.5em;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Focus — visible on everything interactive. Never remove.
+   [data-force-state] lets the styleguide render the focus state statically.
+--------------------------------------------------------------------------- */
+:focus-visible,
+[data-force-state="focus"] {
+  outline: 2px solid var(--color-accent-ink);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — unlayered and !important so nothing downstream can win.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,474 @@
+---
+/**
+ * Permanent dev tool: renders every token and UI variant so drift is visible.
+ * Excluded from the sitemap (astro.config.mjs) and marked noindex.
+ *
+ * Token values and contrast ratios are read from the stylesheets at build
+ * time, so this page can never disagree with the real @theme block.
+ */
+import '../styles/global.css';
+import themeCss from '../styles/global.css?raw';
+import Button from '../components/ui/Button.astro';
+import Tag from '../components/ui/Tag.astro';
+import Rule from '../components/ui/Rule.astro';
+
+type TokenMap = Map<string, string>;
+
+function parseTheme(css: string): TokenMap {
+  const block = css.match(/@theme[^{]*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+  const withoutComments = block.replace(/\/\*[\s\S]*?\*\//g, '');
+  const tokens: TokenMap = new Map();
+  for (const m of withoutComments.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
+    tokens.set(m[1], m[2].trim());
+  }
+  return tokens;
+}
+
+const tokens = parseTheme(themeCss);
+
+function hexToRgb(hex: string): [number, number, number] {
+  let h = hex.replace('#', '');
+  if (h.length === 3) h = [...h].map((c) => c + c).join('');
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number];
+}
+
+// WCAG 2.x relative luminance.
+function luminance(hex: string): number {
+  const [r, g, b] = hexToRgb(hex).map((v) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrast(a: string, b: string): number {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+const colorTokens = [...tokens].filter(([name]) => name.startsWith('--color-'));
+const colorHex = (name: string) => tokens.get(name) ?? '';
+
+interface Pair {
+  fg: string;
+  bg: string;
+  use: string;
+  /** Minimum ratio this pair's intended use requires. */
+  required: 4.5 | 3 | 0;
+}
+
+const pairs: Pair[] = [
+  { fg: '--color-ink', bg: '--color-paper', use: 'Headings', required: 4.5 },
+  { fg: '--color-ink-body', bg: '--color-paper', use: 'Body copy', required: 4.5 },
+  { fg: '--color-ink-muted', bg: '--color-paper', use: 'Captions, meta', required: 4.5 },
+  { fg: '--color-accent-ink', bg: '--color-paper', use: 'Links, small accent text', required: 4.5 },
+  { fg: '--color-accent', bg: '--color-paper', use: 'Display text ≥24px, graphics', required: 3 },
+  { fg: '--color-accent', bg: '--color-paper', use: 'Inline link underline (graphic)', required: 3 },
+  { fg: '--color-white', bg: '--color-accent-ink', use: 'Primary button label', required: 4.5 },
+  { fg: '--color-white', bg: '--color-accent', use: 'Not used — would fail for small text', required: 4.5 },
+  { fg: '--color-ink-body', bg: '--color-paper-alt', use: 'Body copy on section band', required: 4.5 },
+  { fg: '--color-ink-muted', bg: '--color-paper-alt', use: 'Meta on section band', required: 4.5 },
+  { fg: '--color-accent-ink', bg: '--color-paper-alt', use: 'Links on section band', required: 4.5 },
+  { fg: '--color-ink', bg: '--color-accent-wash', use: 'Text on tinted panel / accent tag', required: 4.5 },
+  { fg: '--color-ink-muted', bg: '--color-accent-wash', use: 'Meta on tinted panel', required: 4.5 },
+  { fg: '--color-accent-ink', bg: '--color-accent-wash', use: 'Links on tinted panel', required: 4.5 },
+  { fg: '--color-paper', bg: '--color-ink', use: 'Text on dark section', required: 4.5 },
+  { fg: '--color-accent', bg: '--color-ink', use: 'Accent on dark section, any size', required: 4.5 },
+  { fg: '--color-rule', bg: '--color-paper', use: 'Decorative hairline (no requirement)', required: 0 },
+];
+
+const measured = pairs.map((p) => {
+  const ratio = contrast(colorHex(p.fg), colorHex(p.bg));
+  return {
+    ...p,
+    ratio: ratio.toFixed(2),
+    aaNormal: ratio >= 4.5,
+    aaLarge: ratio >= 3,
+    passes: ratio >= p.required,
+  };
+});
+
+const typeScale = [...tokens].filter(([name]) => name.startsWith('--text-'));
+const fontTokens = [...tokens].filter(([name]) => name.startsWith('--font-'));
+const motionTokens = [...tokens].filter(([name]) => name.startsWith('--ease-') || name.startsWith('--dur-'));
+
+const states = [
+  { label: 'Default', force: undefined },
+  { label: 'Hover', force: 'hover' },
+  { label: 'Focus', force: 'focus' },
+] as const;
+
+const buttonVariants = ['primary', 'secondary', 'ghost'] as const;
+const tagVariants = ['neutral', 'accent'] as const;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Styleguide · Caleb Oluwapelumi</title>
+  </head>
+  <body>
+    <main class="sg">
+      <header class="sg-section">
+        <p class="sg-eyebrow">Dev tool · noindex</p>
+        <h1>Styleguide</h1>
+        <p class="sg-lede">
+          Every token and UI variant, rendered from <code>src/styles/global.css</code>. Contrast
+          ratios are computed at build time from the live token values.
+        </p>
+      </header>
+
+      <section class="sg-section" aria-labelledby="colours">
+        <h2 id="colours">Colour</h2>
+        <ul class="sg-swatches" role="list">
+          {
+            colorTokens.map(([name, value]) => (
+              <li class="sg-swatch">
+                <span class="sg-chip" style={`background-color: var(${name})`} />
+                <code>{name}</code>
+                <span class="sg-meta">{value}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="sg-section" aria-labelledby="contrast">
+        <h2 id="contrast">Contrast</h2>
+        <p class="sg-lede">
+          AA requires 4.5:1 for normal text and 3:1 for large text (≥24px, or ≥18.66px bold) and UI
+          boundaries. “Required” reflects the pair’s intended use.
+        </p>
+        <div class="sg-scroll">
+          <table class="sg-table">
+            <thead>
+              <tr>
+                <th scope="col">Sample</th>
+                <th scope="col">Foreground / background</th>
+                <th scope="col">Use</th>
+                <th scope="col">Ratio</th>
+                <th scope="col">AA normal</th>
+                <th scope="col">AA large</th>
+                <th scope="col">Meets use</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                measured.map((p) => (
+                  <tr class:list={[!p.passes && 'sg-fail']}>
+                    <td>
+                      <span
+                        class="sg-sample"
+                        style={`color: var(${p.fg}); background-color: var(${p.bg})`}
+                      >
+                        Aa small
+                      </span>
+                    </td>
+                    <td>
+                      <code>{p.fg}</code> <span class="sg-meta">{colorHex(p.fg)}</span>
+                      <br />
+                      on <code>{p.bg}</code> <span class="sg-meta">{colorHex(p.bg)}</span>
+                    </td>
+                    <td>{p.use}</td>
+                    <td>
+                      <strong>{p.ratio}:1</strong>
+                    </td>
+                    <td>{p.aaNormal ? 'Pass' : 'Fail'}</td>
+                    <td>{p.aaLarge ? 'Pass' : 'Fail'}</td>
+                    <td>{p.passes ? 'Yes' : 'No'}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sg-section" aria-labelledby="type">
+        <h2 id="type">Type</h2>
+        <ul class="sg-list" role="list">
+          {
+            fontTokens.map(([name, value]) => (
+              <li>
+                <p style={`font-family: var(${name}); font-size: var(--text-h3); color: var(--color-ink)`}>
+                  The common thread is simple.
+                </p>
+                <code>{name}</code> <span class="sg-meta">{value}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h3 class="sg-subhead">Scale</h3>
+        <ul class="sg-list" role="list">
+          {
+            typeScale.map(([name, value]) => (
+              <li>
+                <p
+                  class="sg-type-sample"
+                  style={`font-size: var(${name}); font-family: ${
+                    name === '--text-body' || name === '--text-small' ? 'var(--font-body)' : 'var(--font-display)'
+                  }`}
+                >
+                  Find the problem.
+                </p>
+                <code>{name}</code> <span class="sg-meta">{value}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="sg-section" aria-labelledby="motion">
+        <h2 id="motion">Motion</h2>
+        <ul class="sg-list" role="list">
+          {
+            motionTokens.map(([name, value]) => (
+              <li>
+                <code>{name}</code> <span class="sg-meta">{value}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="sg-section" aria-labelledby="buttons">
+        <h2 id="buttons">Button</h2>
+        <p class="sg-lede">
+          Hover and focus columns are forced statically with <code>data-force-state</code>. The
+          default column is live — hover it or tab to it.
+        </p>
+        <div class="sg-scroll">
+          <table class="sg-table sg-states">
+            <thead>
+              <tr>
+                <th scope="col">Variant</th>
+                {states.map((s) => <th scope="col">{s.label}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {
+                buttonVariants.map((variant) => (
+                  <tr>
+                    <th scope="row">
+                      <code>{variant}</code>
+                    </th>
+                    {states.map((s) => (
+                      <td>
+                        <Button variant={variant} data-force-state={s.force}>
+                          Let’s talk
+                        </Button>
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              }
+              <tr>
+                <th scope="row">as link</th>
+                {
+                  states.map((s) => (
+                    <td>
+                      <Button href="#buttons" variant="primary" data-force-state={s.force}>
+                        View work
+                      </Button>
+                    </td>
+                  ))
+                }
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sg-section" aria-labelledby="tags">
+        <h2 id="tags">Tag</h2>
+        <div class="sg-scroll">
+          <table class="sg-table sg-states">
+            <thead>
+              <tr>
+                <th scope="col">Variant</th>
+                {states.map((s) => <th scope="col">{s.label}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {
+                tagVariants.map((variant) => (
+                  <tr>
+                    <th scope="row">
+                      <code>{variant}</code>
+                    </th>
+                    {states.map((s) => (
+                      <td>
+                        <Tag variant={variant} data-force-state={s.force}>
+                          positioning
+                        </Tag>
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              }
+              {
+                tagVariants.map((variant) => (
+                  <tr>
+                    <th scope="row">
+                      <code>{variant}</code> link
+                    </th>
+                    {states.map((s) => (
+                      <td>
+                        <Tag href="#tags" variant={variant} data-force-state={s.force}>
+                          marketing
+                        </Tag>
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="sg-meta">
+          Non-link tags aren’t interactive, so they have no real hover or focus state; the forced
+          columns show what the attribute does to them.
+        </p>
+      </section>
+
+      <section class="sg-section" aria-labelledby="rules">
+        <h2 id="rules">Rule</h2>
+        <p class="sg-meta">Default</p>
+        <Rule />
+        <p class="sg-meta">accent</p>
+        <Rule accent />
+      </section>
+
+      <section class="sg-section" aria-labelledby="prose">
+        <h2 id="prose">Prose</h2>
+        <div class="prose">
+          <p>
+            Sample markdown body capped at 68ch. <a href="#prose">An inline link</a> keeps body
+            ink with an accent underline. <strong>Strong text</strong> steps up to ink.
+          </p>
+          <h3>A subheading</h3>
+          <ul>
+            <li>List item one</li>
+            <li>List item two</li>
+          </ul>
+          <blockquote>
+            <p>Find the problem. Understand the opportunity. Build the solution.</p>
+          </blockquote>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  .sg {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: 3rem 1.25rem 6rem;
+  }
+
+  .sg-section + .sg-section {
+    margin-top: 4rem;
+  }
+
+  .sg-section h2 {
+    margin-bottom: 1.25rem;
+  }
+
+  .sg-subhead {
+    margin-block: 2rem 1rem;
+  }
+
+  .sg-eyebrow,
+  .sg-meta {
+    font-size: var(--text-small);
+    color: var(--color-ink-muted);
+  }
+
+  .sg-lede {
+    max-width: 68ch;
+    margin-bottom: 1.5rem;
+  }
+
+  code {
+    font-size: 0.875em;
+    color: var(--color-ink);
+  }
+
+  .sg-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  .sg-swatch {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .sg-chip {
+    display: block;
+    height: 4.5rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 0.5rem;
+  }
+
+  .sg-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .sg-type-sample {
+    color: var(--color-ink);
+    line-height: 1.1;
+  }
+
+  .sg-scroll {
+    overflow-x: auto;
+  }
+
+  .sg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-small);
+  }
+
+  .sg-table th,
+  .sg-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--color-rule);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .sg-table thead th {
+    color: var(--color-ink);
+    white-space: nowrap;
+  }
+
+  .sg-states td {
+    padding-block: 1.25rem;
+  }
+
+  .sg-sample {
+    display: inline-block;
+    padding: 0.375rem 0.625rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .sg-fail {
+    background-color: var(--color-accent-wash);
+  }
+
+  .sg-fail td:last-child {
+    color: var(--color-ink);
+    font-weight: 700;
+  }
+</style>

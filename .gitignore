@@ -1,0 +1,18 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.astro/
+.vercel/
+
+# environment — real secrets never get committed; see .env.example
+.env
+.env.*
+!.env.example
+
+# logs
+npm-debug.log*
+
+# OS
+.DS_Store

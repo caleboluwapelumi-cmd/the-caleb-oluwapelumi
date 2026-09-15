@@ -1,0 +1,116 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'primary' | 'secondary' | 'ghost';
+
+type AnchorProps = Omit<HTMLAttributes<'a'>, 'href'> & { href: string };
+type NativeButtonProps = Omit<HTMLAttributes<'button'>, 'type'> & {
+  href?: never;
+  type?: 'button' | 'submit' | 'reset';
+};
+
+export type Props = (AnchorProps | NativeButtonProps) & {
+  variant?: Variant;
+};
+
+const { variant = 'primary', class: className, ...rest } = Astro.props;
+const classes = ['btn', `btn--${variant}`, className];
+---
+
+{
+  'href' in rest && rest.href !== undefined ? (
+    <a class:list={classes} {...(rest as AnchorProps)}>
+      <slot />
+    </a>
+  ) : (
+    <button class:list={classes} type="button" {...(rest as NativeButtonProps)}>
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.625rem 1.375rem;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--dur-fast) var(--ease-out-expo),
+      border-color var(--dur-fast) var(--ease-out-expo),
+      color var(--dur-fast) var(--ease-out-expo),
+      text-decoration-thickness var(--dur-fast) var(--ease-out-expo);
+  }
+
+  /* White label on accent-ink passes AA (5.10:1); on bright accent it would not. */
+  .btn--primary {
+    background-color: var(--color-accent-ink);
+    border-color: var(--color-accent-ink);
+    color: var(--color-white);
+  }
+
+  .btn--secondary {
+    background-color: transparent;
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+
+  .btn--ghost {
+    padding-inline: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: transparent;
+    color: var(--color-ink);
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+  }
+
+  /* Hover is gated to real pointers so touch taps don't leave a stuck state.
+     [data-force-state] lets the styleguide render hover statically. */
+  @media (hover: hover) {
+    .btn--primary:hover {
+      background-color: var(--color-ink);
+      border-color: var(--color-ink);
+    }
+    .btn--secondary:hover {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+    .btn--ghost:hover {
+      color: var(--color-accent-ink);
+      text-decoration-thickness: 3px;
+    }
+  }
+
+  .btn--primary[data-force-state='hover'] {
+    background-color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+  .btn--secondary[data-force-state='hover'] {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .btn--ghost[data-force-state='hover'] {
+    color: var(--color-accent-ink);
+    text-decoration-thickness: 3px;
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+</style>
