@@ -1,7 +1,7 @@
 # Caleb Oluwapelumi — Portfolio Site Build Plan
 
 **Stack:** Astro 5 + Tailwind 4 + TypeScript (strict) · Markdown content in-repo · Vercel
-**Scope:** Full site — Home, Services, Work, About, Insights, Contact
+**Scope:** Full site — Home, Services, Pricing, Work, About, Insights, Contact
 **Direction:** Light editorial, one bold accent, purposeful motion
 **Status:** Plan. No code written yet.
 
@@ -147,6 +147,7 @@ caleb-site/
 │   │   └── insights/             # blog posts (.md)
 │   ├── data/
 │   │   ├── services.ts           # typed service data, single source of truth
+│   │   ├── pricing.ts            # typed packages, NGN + GBP amounts
 │   │   └── site.ts               # name, socials, WhatsApp number, base URL
 │   ├── components/
 │   │   ├── layout/  Header.astro Footer.astro MobileNav.astro
@@ -163,7 +164,8 @@ caleb-site/
 │   │   ├── index.astro
 │   │   ├── about.astro
 │   │   ├── services.astro
-│   │   ├── contact.astro
+│   │   ├── pricing.astro         # packages, NGN + GBP
+│   │   ├── contact.astro         # Cal.com booking embed + form
 │   │   ├── work/        index.astro  [...slug].astro
 │   │   ├── insights/    index.astro  [...slug].astro
 │   │   ├── api/         contact.ts   # prerender = false
@@ -292,7 +294,7 @@ Then build `src/components/ui/`:
 
 `Base.astro`: full document, `lang="en"`, viewport meta, `<Seo />` in head, skip-to-content link as the first focusable element, `<Header />`, `<main id="main">`, `<Footer />`, `<ClientRouter />` for view transitions.
 
-`Header.astro`: logo/wordmark left, nav right (Work, Services, About, Insights), a `primary` "Let's Talk" button. Shrinks and gains a hairline border on scroll — use IntersectionObserver on a sentinel element rather than a scroll listener, it's cheaper and doesn't need throttling. Current page gets `aria-current="page"`.
+`Header.astro`: logo/wordmark left, nav right (Work, Services, Pricing, About, Insights), a `primary` "Let's Talk" button. Shrinks and gains a hairline border on scroll — use IntersectionObserver on a sentinel element rather than a scroll listener, it's cheaper and doesn't need throttling. Current page gets `aria-current="page"`.
 
 `MobileNav.astro`: full-screen overlay under 768px. Must trap focus while open, close on Escape, restore focus to the trigger on close, and set `aria-expanded` on the button. Lock body scroll while open. **This is the single most commonly botched component on portfolio sites** — if the hamburger isn't keyboard-operable the site fails accessibility outright, and it's invisible in manual testing unless you go looking.
 
@@ -344,6 +346,18 @@ One page, deep sections, anchor links from the homepage grid and footer, with a 
 
 **SEO note worth understanding:** your keyword list spans ten distinct search intents — "web development Nigeria" and "sales strategist Nigeria" are different searchers with different problems. A single services page cannot rank well for all of them. Individual `/services/[slug]` pages, each targeting one keyword cluster with its own copy and its own case study, is the play that actually wins that traffic. It's in the Phase 3 backlog rather than v1 because it needs six to eight pages of real copy, not because it's technically hard. You'll recognise the tradeoff — it's your own discipline.
 
+### Step 7.5 · Pricing page
+
+`/pricing` — packages for the three productisable services: **web development**, **video editing**, and **paid ads**. Package data lives in `src/data/pricing.ts` (typed, like `services.ts`): name, who it's for, what's included, turnaround, and an amount in both `ngn` and `gbp`. Every figure starts as a visible `TODO(copy)` — no invented prices.
+
+Each service gets a small set of tiers as cards (name, price, inclusions list, a CTA into `/contact` with the service preselected via query string). Mark prices "from" where scope varies, and say so plainly.
+
+**A "Not sure what you need?" card** closes the grid, routing to the booking embed on `/contact` (`/contact#book`). Consultation-led offers (strategy, positioning) don't get a price card — they route here.
+
+**Currency: NGN and GBP, because the audience is Nigerian and UK SMEs.** Default is both shown together on every card (₦ first, £ beneath) — zero JS, works with scripts off, and nobody has to hunt for their currency. An optional ₦/£ toggle is a progressive enhancement only: a `role="radiogroup"` of two buttons that toggles a class on the grid container, remembered in `localStorage`; with JS off the toggle is hidden and both currencies stay visible. Format with `Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' })` / `('en-GB', …'GBP')` at build time. Set prices per market rather than converting at a live rate — a converted £ figure looks arbitrary and drifts with the naira.
+
+**Verify:** both currencies readable with JS off; toggle (if built) keyboard-operable and announces its state; cards stack cleanly at 320px.
+
 ### Step 8 · Work
 
 `/work` — filterable grid, filters driven by the `category` enum. **Filter with CSS, not by re-rendering:** put `data-category` on each card and toggle a class on the container. Zero framework, zero layout thrash, works instantly. Update `aria-live` on the results count so screen reader users know the filter applied. Reflect the active filter in the URL query string so a filtered view is shareable.
@@ -364,7 +378,9 @@ Write three to five real case studies. This is the step that decides whether the
 
 **The security-sensitive step. Read it carefully.**
 
-`/contact` renders the form, WhatsApp button (`https://wa.me/234XXXXXXXXXX?text=` with a prefilled opener), and direct email link.
+`/contact` renders, in order: a **"Book a Strategy Session"** Cal.com embed, then the form, WhatsApp button (`https://wa.me/234XXXXXXXXXX?text=` with a prefilled opener), and direct email link.
+
+**Booking embed (above the form, `id="book"`):** Cal.com free tier — no backend, no API key, nothing to add to `.env`. Lazy-load it: render a static panel with a real link to the Cal.com booking page, and only inject Cal's embed script when the panel nears the viewport (IntersectionObserver) or the visitor clicks "Show calendar". That keeps a third-party script off the initial load and out of LCP. With JS off, the link still books. Give the iframe a `title`, re-run the loader on `astro:page-load`, and add the Cal.com username to `src/data/site.ts` as a TODO until supplied. If a CSP is added later, allow `app.cal.com`.
 
 Form fields: name, email, business name, "what do you need" (select, mirroring your service lines), budget range (select — this is what turns an enquiry into a qualified lead), message, plus a Turnstile widget and a honeypot input hidden with CSS and `tabindex="-1"` `autocomplete="off"`.
 
@@ -413,7 +429,7 @@ Add Vercel Analytics or Plausible. Submit the sitemap to Google Search Console. 
 
 ## Phase 3 backlog
 
-Per-service landing pages for the ten keyword clusters (highest ROI item here by a distance). Testimonials, once you have them. Case study metrics filled in as results come through. Lead magnet plus email capture. Dark mode. A git-based CMS at `/admin` if you want to publish from your phone. Booking calendar if you productise consultations.
+Per-service landing pages for the ten keyword clusters (highest ROI item here by a distance). Testimonials, once you have them. Case study metrics filled in as results come through. Lead magnet plus email capture. Dark mode. A git-based CMS at `/admin` if you want to publish from your phone. (Booking calendar moved into v1 — see Step 10.)
 
 ---
 

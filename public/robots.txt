@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# TODO: replace TODO-DOMAIN with the real domain, alongside `site` in astro.config.mjs.
+Sitemap: https://TODO-DOMAIN.com/sitemap-index.xml

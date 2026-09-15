@@ -1,0 +1,64 @@
+---
+import { site } from '../../data/site';
+import {
+  graph,
+  personSchema,
+  professionalServiceSchema,
+  type JsonLdNode,
+} from '../../lib/jsonld';
+
+export interface Props {
+  /** Page name; rendered as "Title · Caleb Oluwapelumi". Omit on the homepage. */
+  title?: string;
+  description?: string;
+  /** Path or absolute URL. Step 11 supplies generated OG images as the default. */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  /** Page-specific nodes (BlogPosting, CreativeWork) added to the site graph. */
+  jsonLd?: readonly JsonLdNode[];
+}
+
+const {
+  title,
+  // TODO(copy): default meta description — pending Step 0 copy rework.
+  description = `${site.name}, ${site.role}.`,
+  image,
+  imageAlt,
+  type = 'website',
+  noindex = false,
+  jsonLd = [],
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL(site.baseUrl);
+const documentTitle = title ? `${title} · ${site.name}` : site.name;
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const imageUrl = image ? new URL(image, siteUrl).href : undefined;
+
+// Escaping "<" stops a string value containing "</script>" from closing the tag.
+const structuredData = JSON.stringify(
+  graph([personSchema(siteUrl), professionalServiceSchema(siteUrl), ...jsonLd]),
+).replace(/</g, '\\u003c');
+---
+
+<title>{documentTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={documentTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+{imageUrl && <meta property="og:image" content={imageUrl} />}
+{imageUrl && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+
+<meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={documentTitle} />
+<meta name="twitter:description" content={description} />
+{imageUrl && <meta name="twitter:image" content={imageUrl} />}
+{imageUrl && imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
+
+<script is:inline type="application/ld+json" set:html={structuredData} />

@@ -3,16 +3,11 @@ import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
-import { site } from '../data/site';
+import Seo, { type Props as SeoProps } from '../components/seo/Seo.astro';
 
-export interface Props {
-  title?: string;
-  description?: string;
-  noindex?: boolean;
-}
+export interface Props extends SeoProps {}
 
-const { title, description, noindex = false } = Astro.props;
-const documentTitle = title ? `${title} · ${site.name}` : site.name;
+const seo = Astro.props;
 ---
 
 <html lang="en">
@@ -21,10 +16,7 @@ const documentTitle = title ? `${title} · ${site.name}` : site.name;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    {/* Step 4 replaces the title, description and robots tags below with <Seo />. */}
-    <title>{documentTitle}</title>
-    {description && <meta name="description" content={description} />}
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <Seo {...seo} />
     <ClientRouter />
     {/* Without JS the menu toggle can't open anything, so small screens fall
         back to the inline nav and CTA, wrapping under the wordmark. */}

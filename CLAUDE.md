@@ -62,7 +62,7 @@ Verify work with `npm run build && npx astro check`, never by starting the dev s
 - **Body copy** caps at `max-width: 68ch`.
 - **Comments** explain *why*, not *what*. Skip them when the code is self-evident.
 - **Placeholders:** mark unfinished copy as `{/* TODO(copy): ... */}` so it's greppable. Never invent client names, testimonials, metrics, or case study results — leave a visible TODO instead.
-- **Commits:** conventional style (`feat:`, `fix:`, `chore:`, `refactor:`). Do not commit unless asked.
+- **Commits:** conventional style (`feat:`, `fix:`, `chore:`, `refactor:`). Commit and push at the end of every numbered step that passes its definition of done, without being asked. If no remote is configured, commit locally and say so. Otherwise, don't commit unless asked.
 
 ## Dependencies
 
@@ -98,4 +98,4 @@ Report which of these you verified and how. Do not claim a step is done on steps
 
 ## Placeholders to fill
 
-`src/data/site.ts` carries `TODO` values for the domain and WhatsApp number. Leave them as TODOs until supplied; don't guess.
+`src/data/site.ts` carries `TODO` values for the domain, LinkedIn URL and WhatsApp number. The domain also appears in `astro.config.mjs` (`site`) and `public/robots.txt` (`Sitemap:`) — update all three together. Leave them as TODOs until supplied; don't guess.
