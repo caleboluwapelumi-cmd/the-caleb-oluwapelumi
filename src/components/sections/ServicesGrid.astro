@@ -1,0 +1,118 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Reveal from '../ui/Reveal.astro';
+import { leadServices, supportingServices, serviceHref } from '../../data/services';
+---
+
+<section class="section section--alt" aria-labelledby="services-title">
+  <div class="shell">
+    {/* TODO(copy): section eyebrow and heading. */}
+    <SectionHeader id="services-title" eyebrow="What I do" title="TODO(copy): services heading">
+      <p>TODO(copy): services intro</p>
+    </SectionHeader>
+
+    <Reveal as="ul" stagger class="lead-grid" role="list">
+      {
+        leadServices.map((service, i) => (
+          <li class="card">
+            <span class="card-index" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3>
+              <a href={serviceHref(service.slug)} class="card-link">
+                {service.name}
+              </a>
+            </h3>
+            <p>{service.summary}</p>
+          </li>
+        ))
+      }
+    </Reveal>
+
+    <Reveal class="supporting">
+      {/* TODO(copy): supporting capabilities label. */}
+      <h3 class="eyebrow">Also available</h3>
+      <ul role="list">
+        {
+          supportingServices.map((service) => (
+            <li>
+              <a href={serviceHref(service.slug)}>{service.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </Reveal>
+  </div>
+</section>
+
+<style>
+  .lead-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (width >= 40rem) {
+    .lead-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(1.5rem, 1.25rem + 1vw, 2.25rem);
+    border: 1px solid var(--color-rule);
+    border-radius: 0.5rem;
+    background-color: var(--color-paper);
+    transition: border-color var(--dur-fast) var(--ease-out-expo);
+  }
+
+  /* Bright accent only clears contrast as large text, so this stays ≥ 28px. */
+  .card-index {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .card-link {
+    color: var(--color-ink);
+    text-decoration-line: none;
+  }
+
+  /* Whole card is the hit area; the link text stays the accessible name. */
+  .card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  @media (hover: hover) {
+    .card:hover {
+      border-color: var(--color-ink);
+    }
+    .card:hover .card-link {
+      text-decoration-line: underline;
+    }
+  }
+
+  .supporting {
+    margin-top: 2.5rem;
+  }
+
+  .supporting ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .supporting a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+</style>

@@ -1,19 +1,26 @@
 ---
-// Scaffold placeholder. Replaced in Step 6.
 import Base from '../layouts/Base.astro';
-import { site } from '../data/site';
+import Hero from '../components/sections/Hero.astro';
+import ProofBand from '../components/sections/ProofBand.astro';
+import ServicesGrid from '../components/sections/ServicesGrid.astro';
+import WhyCaleb from '../components/sections/WhyCaleb.astro';
+import WorkPreview from '../components/sections/WorkPreview.astro';
+import ProcessSteps from '../components/sections/ProcessSteps.astro';
+import InsightsPreview from '../components/sections/InsightsPreview.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+
+// Wired to the work and insights collections in Steps 8 and 9.
+const featuredWork: [] = [];
+const latestInsights: [] = [];
 ---
 
 <Base>
-  <div class="placeholder">
-    <h1>{site.name}</h1>
-  </div>
+  <Hero />
+  <ProofBand />
+  <ServicesGrid />
+  <WhyCaleb />
+  <WorkPreview items={featuredWork} />
+  <ProcessSteps />
+  <InsightsPreview items={latestInsights} />
+  <CtaBand />
 </Base>
-
-<style>
-  .placeholder {
-    max-width: 72rem;
-    margin-inline: auto;
-    padding: 3rem 1.25rem 6rem;
-  }
-</style>

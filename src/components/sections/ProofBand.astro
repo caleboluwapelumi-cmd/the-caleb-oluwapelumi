@@ -1,0 +1,29 @@
+---
+import Rule from '../ui/Rule.astro';
+---
+
+{/*
+  Sits directly under the hero, so it's often above the fold: not revealed.
+  Plan calls this the highest-leverage 60px on the site — don't remove it,
+  fill it.
+*/}
+<section class="proof" aria-label="Credentials">
+  <div class="shell">
+    <Rule accent />
+    {/* TODO(copy): client logos or a one-line credibility statement. Real names/numbers only. */}
+    <p class="proof-line">TODO(copy): credibility statement or client logos</p>
+  </div>
+</section>
+
+<style>
+  .proof {
+    padding-block: 0 clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+
+  .proof-line {
+    padding-top: 1.25rem;
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--color-ink-body);
+  }
+</style>

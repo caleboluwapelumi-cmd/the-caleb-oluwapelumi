@@ -1,0 +1,55 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Reveal from '../ui/Reveal.astro';
+
+// TODO(copy): reasons to hire Caleb. Each claim needs proof beside it, or cut it.
+const reasons = [
+  { title: 'TODO(copy): reason', body: 'TODO(copy): supporting detail and proof' },
+  { title: 'TODO(copy): reason', body: 'TODO(copy): supporting detail and proof' },
+  { title: 'TODO(copy): reason', body: 'TODO(copy): supporting detail and proof' },
+];
+---
+
+<section class="section" aria-labelledby="why-title">
+  <div class="shell">
+    <Reveal>
+      {/* TODO(copy): section eyebrow and heading. */}
+      <SectionHeader id="why-title" eyebrow="Why work with me" title="TODO(copy): why-Caleb heading">
+        <p>TODO(copy): why-Caleb intro, in the About section's voice</p>
+      </SectionHeader>
+    </Reveal>
+
+    <Reveal as="ul" stagger class="reasons" role="list">
+      {
+        reasons.map((reason) => (
+          <li>
+            <h3>{reason.title}</h3>
+            <p>{reason.body}</p>
+          </li>
+        ))
+      }
+    </Reveal>
+  </div>
+</section>
+
+<style>
+  .reasons {
+    display: grid;
+    gap: 2rem;
+  }
+
+  @media (width >= 48rem) {
+    .reasons {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  li {
+    padding-top: 1.25rem;
+    border-top: 3px solid var(--color-accent);
+  }
+
+  p {
+    margin-top: 0.75rem;
+  }
+</style>

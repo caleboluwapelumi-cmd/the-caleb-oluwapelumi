@@ -1,0 +1,56 @@
+---
+import Button from '../ui/Button.astro';
+import { site } from '../../data/site';
+---
+
+{/* Above the fold: no reveal, no animation — it would delay LCP. */}
+<section class="hero" aria-labelledby="hero-title">
+  <div class="shell hero-inner">
+    <p class="eyebrow">{site.role}</p>
+    <h1 id="hero-title">{site.name}</h1>
+    {/* TODO(copy): positioning line — pending Step 0. Lives in site.ts as `tagline`. */}
+    <p class="hero-line">{site.tagline}</p>
+    {/* TODO(copy): hero sub-paragraph naming the specific audience. */}
+    <p class="hero-sub measure">TODO(copy): hero sub-paragraph</p>
+    <div class="hero-actions">
+      {/* TODO(copy): CTA labels. */}
+      <Button href="/contact" variant="primary">Let’s Talk</Button>
+      <Button href="/work" variant="secondary">See the work</Button>
+    </div>
+    {/* TODO(photo): portrait. Use <Image> with loading="eager" and fetchpriority="high". */}
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: clamp(3rem, 2rem + 5vw, 7rem) clamp(3rem, 2rem + 3vw, 5rem);
+  }
+
+  h1 {
+    margin-top: 1rem;
+    font-size: var(--text-display);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-line {
+    max-width: 24ch;
+    margin-top: 1.5rem;
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    line-height: 1.15;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+</style>

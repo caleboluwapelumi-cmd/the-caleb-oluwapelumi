@@ -1,0 +1,89 @@
+---
+export interface Props {
+  href: string;
+  title: string;
+  description: string;
+  publishDate: Date;
+  readingMinutes: number;
+  tagLabels: readonly string[];
+  headingLevel?: 'h2' | 'h3';
+}
+
+const {
+  href,
+  title,
+  description,
+  publishDate,
+  readingMinutes,
+  tagLabels,
+  headingLevel: Heading = 'h3',
+} = Astro.props;
+
+const displayDate = publishDate.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<article class="insight-card">
+  <p class="meta">
+    <time datetime={publishDate.toISOString()}>{displayDate}</time>
+    <span aria-hidden="true">·</span>
+    {/* TODO(copy): reading-time label. */}
+    <span>{readingMinutes} min read</span>
+  </p>
+  <Heading class="title">
+    <a href={href} class="card-link">{title}</a>
+  </Heading>
+  <p class="description">{description}</p>
+  {tagLabels.length > 0 && <p class="tags">{tagLabels.join(' · ')}</p>}
+</article>
+
+<style>
+  .insight-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-rule);
+    transition: border-color var(--dur-fast) var(--ease-out-expo);
+  }
+
+  .meta,
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: var(--text-small);
+    color: var(--color-ink-muted);
+  }
+
+  .title {
+    font-size: var(--text-h3);
+    line-height: 1.25;
+  }
+
+  .card-link {
+    color: var(--color-ink);
+    text-decoration-line: none;
+  }
+
+  .card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  @media (hover: hover) {
+    .insight-card:hover {
+      border-top-color: var(--color-accent);
+    }
+    .insight-card:hover .card-link {
+      text-decoration-line: underline;
+    }
+  }
+</style>

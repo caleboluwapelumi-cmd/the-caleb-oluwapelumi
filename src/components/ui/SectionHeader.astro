@@ -1,0 +1,37 @@
+---
+export interface Props {
+  /** id of the <h2>, for the parent section's aria-labelledby. */
+  id: string;
+  title: string;
+  eyebrow?: string;
+  align?: 'start' | 'center';
+}
+
+const { id, title, eyebrow, align = 'start' } = Astro.props;
+---
+
+<header class:list={['section-header', `section-header--${align}`]}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h2 id={id}>{title}</h2>
+  {Astro.slots.has('default') && <div class="lede"><slot /></div>}
+</header>
+
+<style>
+  .section-header {
+    max-width: 68ch;
+    margin-bottom: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  }
+
+  .section-header--center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .eyebrow {
+    margin-bottom: 0.75rem;
+  }
+
+  .lede {
+    margin-top: 1rem;
+  }
+</style>

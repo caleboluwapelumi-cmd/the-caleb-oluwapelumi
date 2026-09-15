@@ -232,11 +232,24 @@
    Layout helpers
 --------------------------------------------------------------------------- */
 @layer components {
-  .container {
+  .shell {
     width: 100%;
     max-width: 72rem;
     margin-inline: auto;
     padding-inline: 1.25rem;
+  }
+
+  .section {
+    padding-block: clamp(4rem, 3rem + 4vw, 7rem);
+  }
+
+  .section--alt {
+    background-color: var(--color-paper-alt);
+  }
+
+  /* Body-width measure for lede paragraphs outside .prose. */
+  .measure {
+    max-width: 68ch;
   }
 
   .eyebrow {

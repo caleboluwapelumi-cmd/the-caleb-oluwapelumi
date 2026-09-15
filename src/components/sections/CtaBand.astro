@@ -1,0 +1,75 @@
+---
+import Button from '../ui/Button.astro';
+import Reveal from '../ui/Reveal.astro';
+
+export interface Props {
+  /** Unique per page, for aria-labelledby. */
+  id?: string;
+  title?: string;
+  href?: string;
+  label?: string;
+}
+
+// TODO(copy): default CTA heading, supporting line and button label.
+const {
+  id = 'cta-title',
+  title = 'TODO(copy): final CTA heading',
+  href = '/contact',
+  label = 'Let’s Talk',
+} = Astro.props;
+---
+
+<section class="cta-band" aria-labelledby={id}>
+  <Reveal class="shell inner">
+    <h2 id={id}>{title}</h2>
+    <p class="measure"><slot>TODO(copy): final CTA supporting line</slot></p>
+    <div class="actions">
+      <Button href={href} variant="primary">{label}</Button>
+    </div>
+  </Reveal>
+</section>
+
+<style>
+  /* On ink the bright accent passes at any size, so it can carry small UI here. */
+  .cta-band {
+    padding-block: clamp(4rem, 3rem + 4vw, 7rem);
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  h2 {
+    max-width: 20ch;
+    color: var(--color-paper);
+  }
+
+  h2::after {
+    content: '';
+    display: block;
+    width: 4rem;
+    height: 3px;
+    margin-top: 1.5rem;
+    background-color: var(--color-accent);
+  }
+
+  p {
+    margin-top: 1.5rem;
+    color: var(--color-paper);
+  }
+
+  .actions {
+    margin-top: 2rem;
+  }
+
+  /* The default primary hover turns ink, which would vanish on this band. */
+  @media (hover: hover) {
+    .cta-band :global(.btn--primary:hover) {
+      background-color: var(--color-paper);
+      border-color: var(--color-paper);
+      color: var(--color-ink);
+    }
+  }
+
+  .cta-band :global(:focus-visible) {
+    outline-color: var(--color-accent);
+  }
+</style>

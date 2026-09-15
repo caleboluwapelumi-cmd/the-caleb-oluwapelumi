@@ -1,0 +1,56 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Reveal from '../ui/Reveal.astro';
+import Button from '../ui/Button.astro';
+import InsightCard, { type Props as InsightCardProps } from '../ui/InsightCard.astro';
+
+export interface Props {
+  items: readonly InsightCardProps[];
+}
+
+const { items } = Astro.props;
+---
+
+{/* Omitted when nothing is published — an empty blog preview is worse than none. */}
+{
+  items.length > 0 && (
+    <section class="section section--alt" aria-labelledby="insights-title">
+      <div class="shell">
+        <Reveal>
+          {/* TODO(copy): section eyebrow and heading. */}
+          <SectionHeader id="insights-title" eyebrow="Insights" title="TODO(copy): insights heading" />
+        </Reveal>
+
+        <Reveal as="ul" stagger class="grid" role="list">
+          {items.map((item) => (
+            <li>
+              <InsightCard {...item} />
+            </li>
+          ))}
+        </Reveal>
+
+        <div class="more">
+          {/* TODO(copy): link label. */}
+          <Button href="/insights" variant="ghost">All insights</Button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  @media (width >= 48rem) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .more {
+    margin-top: 2rem;
+  }
+</style>

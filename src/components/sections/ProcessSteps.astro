@@ -1,0 +1,72 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Reveal from '../ui/Reveal.astro';
+
+// TODO(copy): the four steps of how Caleb works.
+const steps = [
+  { title: 'TODO(copy): step name', body: 'TODO(copy): what happens in this step' },
+  { title: 'TODO(copy): step name', body: 'TODO(copy): what happens in this step' },
+  { title: 'TODO(copy): step name', body: 'TODO(copy): what happens in this step' },
+  { title: 'TODO(copy): step name', body: 'TODO(copy): what happens in this step' },
+];
+---
+
+<section class="section section--alt" aria-labelledby="process-title">
+  <div class="shell">
+    <Reveal>
+      {/* TODO(copy): section eyebrow and heading. */}
+      <SectionHeader id="process-title" eyebrow="How I work" title="TODO(copy): process heading" />
+    </Reveal>
+
+    <Reveal as="ol" stagger class="steps" role="list">
+      {
+        steps.map((step, i) => (
+          <li>
+            <span class="step-number" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3>
+              <span class="sr-only">Step {i + 1}: </span>
+              {step.title}
+            </h3>
+            <p>{step.body}</p>
+          </li>
+        ))
+      }
+    </Reveal>
+  </div>
+</section>
+
+<style>
+  .steps {
+    display: grid;
+    gap: 2.5rem 2rem;
+  }
+
+  @media (width >= 40rem) {
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 64rem) {
+    .steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* Bright accent is ~2.98:1 on the paper-alt band — under even the
+     large-text floor — so numerals here use accent-ink. */
+  .step-number {
+    display: block;
+    margin-bottom: 1rem;
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    line-height: 1;
+    color: var(--color-accent-ink);
+  }
+
+  p {
+    margin-top: 0.75rem;
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Reveal from '../ui/Reveal.astro';
+import Button from '../ui/Button.astro';
+import WorkCard, { type Props as WorkCardProps } from '../ui/WorkCard.astro';
+
+export interface Props {
+  items: readonly WorkCardProps[];
+}
+
+const { items } = Astro.props;
+---
+
+{/* Omitted entirely when nothing is published, rather than shipping an empty shell. */}
+{
+  items.length > 0 && (
+    <section class="section" aria-labelledby="work-title">
+      <div class="shell">
+        <Reveal class="head">
+          {/* TODO(copy): section eyebrow and heading. */}
+          <SectionHeader id="work-title" eyebrow="Selected work" title="TODO(copy): featured work heading" />
+        </Reveal>
+
+        <Reveal as="ul" stagger class="grid" role="list">
+          {items.map((item) => (
+            <li>
+              <WorkCard {...item} />
+            </li>
+          ))}
+        </Reveal>
+
+        <div class="more">
+          {/* TODO(copy): link label. */}
+          <Button href="/work" variant="ghost">All work</Button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (width >= 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .more {
+    margin-top: 2rem;
+  }
+</style>
