@@ -7,6 +7,8 @@ import { insightTagLabels } from '../data/taxonomy';
 import { blogPostingSchema } from '../lib/jsonld';
 import { formatDate } from '../lib/dates';
 import { insightHref, readingMinutes, type InsightEntry } from '../lib/collections';
+import { ogImagePath } from '../lib/og';
+import { site } from '../data/site';
 
 export interface Props {
   entry: InsightEntry;
@@ -26,6 +28,8 @@ const minutes = readingMinutes(entry.body);
   title={data.title}
   description={data.description}
   type="article"
+  image={ogImagePath(insightHref(entry))}
+  imageAlt={`${data.title} — ${site.name}`}
   jsonLd={[
     blogPostingSchema(siteUrl, {
       path: insightHref(entry),

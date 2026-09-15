@@ -1,6 +1,7 @@
 ---
 import { site } from '../../data/site';
 import { services } from '../../data/services';
+import { hasStaticOgImage, ogImagePath } from '../../lib/og';
 import {
   graph,
   personSchema,
@@ -12,7 +13,7 @@ export interface Props {
   /** Page name; rendered as "Title · Caleb Oluwapelumi". Omit on the homepage. */
   title?: string;
   description?: string;
-  /** Path or absolute URL. Step 11 supplies generated OG images as the default. */
+  /** Path or absolute URL. Defaults to this page's generated OG image. */
   image?: string;
   imageAlt?: string;
   type?: 'website' | 'article';
@@ -35,7 +36,9 @@ const {
 const siteUrl = Astro.site ?? new URL(site.baseUrl);
 const documentTitle = title ? `${title} · ${site.name}` : site.name;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
-const imageUrl = image ? new URL(image, siteUrl).href : undefined;
+// Pages with a generated card (src/pages/og/[...route].png.ts) fall back to it.
+const resolvedImage = image ?? (hasStaticOgImage(Astro.url.pathname) ? ogImagePath(Astro.url.pathname) : undefined);
+const imageUrl = resolvedImage ? new URL(resolvedImage, siteUrl).href : undefined;
 
 // Escaping "<" stops a string value containing "</script>" from closing the tag.
 const structuredData = JSON.stringify(

@@ -98,4 +98,4 @@ Report which of these you verified and how. Do not claim a step is done on steps
 
 ## Placeholders to fill
 
-`src/data/site.ts` carries `TODO` values for the domain, LinkedIn URL and WhatsApp number. The domain also appears in `astro.config.mjs` (`site`) and `public/robots.txt` (`Sitemap:`) — update all three together. Leave them as TODOs until supplied; don't guess.
+`src/data/site.ts` carries `TODO` values for the domain, LinkedIn URL, WhatsApp number and Cal.com booking link (`calLink`). The domain also appears in `astro.config.mjs` (the `SITE` constant, which feeds `site` and `security.allowedDomains`) and `public/robots.txt` (`Sitemap:`) — update all three together. The contact endpoint derives its `from` address from that domain and refuses to send while it is a TODO. Leave them as TODOs until supplied; don't guess.

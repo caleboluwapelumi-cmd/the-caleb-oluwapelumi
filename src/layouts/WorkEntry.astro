@@ -5,8 +5,10 @@ import Tag from '../components/ui/Tag.astro';
 import Reveal from '../components/ui/Reveal.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
 import { workCategoryLabels } from '../data/taxonomy';
+import { site } from '../data/site';
 import { creativeWorkSchema } from '../lib/jsonld';
 import { workHref, type WorkEntry } from '../lib/collections';
+import { ogImagePath } from '../lib/og';
 
 export interface Props {
   entry: WorkEntry;
@@ -24,6 +26,8 @@ const siteUrl = Astro.site ?? Astro.url;
 <Base
   title={data.title}
   description={data.summary}
+  image={ogImagePath(path)}
+  imageAlt={`${data.title} — ${site.name}`}
   jsonLd={[
     creativeWorkSchema(siteUrl, {
       path,
