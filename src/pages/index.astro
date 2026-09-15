@@ -8,9 +8,13 @@ import WorkPreview from '../components/sections/WorkPreview.astro';
 import ProcessSteps from '../components/sections/ProcessSteps.astro';
 import InsightsPreview from '../components/sections/InsightsPreview.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
+import { getPublishedWork, toWorkCard } from '../lib/collections';
 
-// Wired to the work and insights collections in Steps 8 and 9.
-const featuredWork: [] = [];
+const featuredWork = (await getPublishedWork())
+  .filter((entry) => entry.data.featured)
+  .slice(0, 3)
+  .map((entry) => toWorkCard(entry));
+// Wired to the insights collection in Step 9.
 const latestInsights: [] = [];
 ---
 

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <!-- Placeholder only. Replace with a real project visual before publishing any case study. -->
+  <rect width="1600" height="1200" fill="#F3F1EC"/>
+  <path d="M0 1200 1600 0" stroke="#E2DED6" stroke-width="4"/>
+  <path d="M0 0 1600 1200" stroke="#E2DED6" stroke-width="4"/>
+  <rect x="120" y="1040" width="160" height="12" fill="#FF4A1C"/>
+  <text x="120" y="1000" font-family="Georgia, serif" font-size="72" fill="#6B6660">TODO: project image</text>
+</svg>

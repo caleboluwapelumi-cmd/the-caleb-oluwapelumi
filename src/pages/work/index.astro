@@ -1,0 +1,71 @@
+---
+import Page from '../../layouts/Page.astro';
+import WorkCard from '../../components/ui/WorkCard.astro';
+import FilterBar from '../../components/ui/FilterBar.astro';
+import Button from '../../components/ui/Button.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import { getPublishedWork, toWorkCard } from '../../lib/collections';
+import { workCategories, workCategoryLabels } from '../../data/taxonomy';
+
+const entries = await getPublishedWork();
+// Only offer filters that would show something.
+const present = new Set(entries.map((e) => e.data.category));
+const options = workCategories
+  .filter((c) => present.has(c))
+  .map((c) => ({ value: c, label: workCategoryLabels[c] }));
+---
+
+{/* TODO(copy): meta description for the work index. */}
+<Page title="Work" description="TODO(copy): work page meta description">
+  <p slot="lede">TODO(copy): work page intro</p>
+
+  {
+    entries.length > 0 ? (
+      <div data-filter-root data-filter-param="category">
+        {/* TODO(copy): filter group label. */}
+        {options.length > 1 && <FilterBar label="Filter case studies by category" options={options} />}
+        <ul class="grid" role="list">
+          {entries.map((entry) => (
+            <li data-filter-values={entry.data.category}>
+              <WorkCard {...toWorkCard(entry, 'h2')} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <div class="empty">
+        {/* TODO(copy): empty state, shown until the first case study is published. */}
+        <p class="measure">TODO(copy): case studies are on the way</p>
+        <Button href="/contact" variant="primary">Let’s Talk</Button>
+      </div>
+    )
+  }
+
+  <CtaBand slot="after" id="work-index-cta" />
+</Page>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (width >= 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+</style>

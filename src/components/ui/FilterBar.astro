@@ -1,0 +1,101 @@
+---
+export interface FilterOption {
+  value: string;
+  label: string;
+}
+
+export interface Props {
+  /** Accessible name for the button group. */
+  label: string;
+  options: readonly FilterOption[];
+  /** Label for the reset option. */
+  allLabel?: string;
+  /** Announced after filtering. {shown} and {total} are replaced. */
+  countTemplate?: string;
+}
+
+// TODO(copy): default filter labels.
+const {
+  label,
+  options,
+  allLabel = 'All',
+  countTemplate = 'Showing {shown} of {total}',
+} = Astro.props;
+
+// One rule per option, generated from the same enum that drives the buttons,
+// so adding a category never needs a hand-written selector.
+const escape = (value: string) => value.replace(/["\\]/g, '\\$&');
+const rules = options
+  .map(
+    ({ value }) =>
+      `[data-filter-active="${escape(value)}"] [data-filter-values]:not([data-filter-values~="${escape(value)}"]){display:none}`,
+  )
+  .join('\n');
+---
+
+<style is:inline set:html={rules}></style>
+
+{/* Hidden until src/lib/filter.ts runs; without JS every item stays visible. */}
+<div class="filter-bar" data-filter-bar hidden>
+  <div class="buttons" role="group" aria-label={label}>
+    <button type="button" class="filter" data-filter-value="all" aria-pressed="true">
+      {allLabel}
+    </button>
+    {
+      options.map((option) => (
+        <button type="button" class="filter" data-filter-value={option.value} aria-pressed="false">
+          {option.label}
+        </button>
+      ))
+    }
+  </div>
+</div>
+<p class="sr-only" data-filter-count data-template={countTemplate} aria-live="polite"></p>
+
+<script>
+  import { initFilters } from '../../lib/filter';
+
+  document.addEventListener('astro:page-load', initFilters);
+</script>
+
+<style>
+  .filter-bar {
+    margin-bottom: 2rem;
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.125rem;
+    border: 2px solid var(--color-rule);
+    border-radius: 999px;
+    background-color: transparent;
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease-out-expo),
+      background-color var(--dur-fast) var(--ease-out-expo),
+      color var(--dur-fast) var(--ease-out-expo);
+  }
+
+  .filter[aria-pressed='true'] {
+    border-color: var(--color-ink);
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  @media (hover: hover) {
+    .filter:hover {
+      border-color: var(--color-ink);
+    }
+  }
+</style>
