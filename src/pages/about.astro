@@ -1,0 +1,176 @@
+---
+import Page from '../layouts/Page.astro';
+import Rule from '../components/ui/Rule.astro';
+import Reveal from '../components/ui/Reveal.astro';
+import Button from '../components/ui/Button.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import { site } from '../data/site';
+
+/*
+ * Structure follows BUILD-PLAN.md Step 6.5, which mirrors the About section of
+ * the original brief. Every string below is a placeholder on purpose: the brief
+ * copy is transferred verbatim, not paraphrased, so the voice survives.
+ */
+
+// TODO(copy): the three beats of the through-line, verbatim from the brief.
+const throughLine = [
+  'TODO(copy): find the problem',
+  'TODO(copy): understand the opportunity',
+  'TODO(copy): build the solution',
+];
+---
+
+{/* TODO(copy): meta description for the about page. */}
+<Page
+  title="About"
+  heading="TODO(copy): about page heading"
+  description="TODO(copy): about page meta description"
+>
+  {/* TODO(copy): opening line — "I'm Caleb Oluwapelumi…" plus the audience. */}
+  <p slot="lede">TODO(copy): about page opening — who Caleb is and who he works with</p>
+
+  <div class="about">
+    <section class="intro" aria-labelledby="about-intro">
+      <Reveal>
+        {/* TODO(copy): section heading. */}
+        <h2 id="about-intro">TODO(copy): intro section heading</h2>
+        <div class="prose">
+          {/* TODO(copy): the "sometimes that means…" range paragraph, verbatim. */}
+          <p>TODO(copy): the range paragraph — strategy, positioning, a website, an edit, a campaign, a digital solution</p>
+          {/* TODO(copy): second paragraph — how the range holds together. */}
+          <p>TODO(copy): second intro paragraph</p>
+        </div>
+      </Reveal>
+    </section>
+
+    <Rule accent />
+
+    {/* The strongest line in the brief. Display type, full page measure, and a
+        list so the three beats keep their order without JS or decoration. */}
+    <section class="through-line" aria-labelledby="about-through-line">
+      <Reveal>
+        {/* TODO(copy): label above the three beats. */}
+        <h2 id="about-through-line" class="eyebrow">The common thread</h2>
+        <ol class="beats" role="list">
+          {
+            throughLine.map((beat, i) => (
+              <li>
+                <span class="beat-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span class="beat-text">{beat}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </Reveal>
+    </section>
+
+    <Rule />
+
+    <section class="routes" aria-labelledby="about-routes">
+      <Reveal>
+        {/* TODO(copy): section heading. */}
+        <h2 id="about-routes">TODO(copy): how that plays out heading</h2>
+        <div class="prose">
+          {/* TODO(copy): short restatement of how the work runs. */}
+          <p>TODO(copy): how the work actually runs, in two or three sentences</p>
+        </div>
+        <div class="actions">
+          {/* TODO(copy): CTA labels. */}
+          <Button href="/work" variant="primary">See the work</Button>
+          <Button href="/services" variant="ghost">What I do</Button>
+        </div>
+      </Reveal>
+    </section>
+
+    <Rule />
+
+    <section class="elsewhere" aria-labelledby="about-elsewhere">
+      <Reveal>
+        {/* TODO(copy): section heading. */}
+        <h2 id="about-elsewhere" class="eyebrow">Elsewhere</h2>
+        <ul role="list" class="links">
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={site.linkedin} rel="me noopener">LinkedIn</a></li>
+        </ul>
+      </Reveal>
+    </section>
+  </div>
+
+  <CtaBand slot="after" id="about-cta" />
+</Page>
+
+<style>
+  .about > * + * {
+    margin-top: clamp(3rem, 2.5rem + 2vw, 4.5rem);
+  }
+
+  .prose {
+    max-width: 68ch;
+  }
+
+  .prose p + p {
+    margin-top: 1.25rem;
+  }
+
+  .intro h2,
+  .routes h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .beats {
+    display: grid;
+    gap: clamp(1.5rem, 1.25rem + 1vw, 2.5rem);
+    margin-top: 1.5rem;
+  }
+
+  @media (width >= 48rem) {
+    .beats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .beats li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Page background is paper (3.22:1) and this is display type well above the
+     large-text floor, so bright accent is allowed here. */
+  .beat-index {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .beat-text {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: 1.25;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-top: 2rem;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+</style>

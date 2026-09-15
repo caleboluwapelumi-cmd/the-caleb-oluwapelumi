@@ -1,7 +1,7 @@
 ---
 import SectionHeader from '../ui/SectionHeader.astro';
 import Reveal from '../ui/Reveal.astro';
-import { leadServices, supportingServices, serviceHref } from '../../data/services';
+import { leadServices, buildUpServices, supportingServices, serviceHref } from '../../data/services';
 ---
 
 <section class="section section--alt" aria-labelledby="services-title">
@@ -29,7 +29,23 @@ import { leadServices, supportingServices, serviceHref } from '../../data/servic
       }
     </Reveal>
 
-    <Reveal class="supporting">
+    {/* Build-up sits between the leads and the flat list: it feeds the lead
+        offers rather than standing alongside the rest of the capabilities. */}
+    <Reveal class="secondary">
+      {/* TODO(copy): build-up capability label. */}
+      <h3 class="eyebrow">Underpinning the work</h3>
+      <ul role="list">
+        {
+          buildUpServices.map((service) => (
+            <li>
+              <a href={serviceHref(service.slug)}>{service.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </Reveal>
+
+    <Reveal class="secondary">
       {/* TODO(copy): supporting capabilities label. */}
       <h3 class="eyebrow">Also available</h3>
       <ul role="list">
@@ -46,15 +62,12 @@ import { leadServices, supportingServices, serviceHref } from '../../data/servic
 </section>
 
 <style>
+  /* Three leads: auto-fit resolves to 1 / 2 / 3 columns with no orphan row, and
+     the inner min() stops the track forcing a horizontal scroll under 320px. */
   .lead-grid {
     display: grid;
     gap: 1rem;
-  }
-
-  @media (width >= 40rem) {
-    .lead-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
   }
 
   .card {
@@ -69,7 +82,8 @@ import { leadServices, supportingServices, serviceHref } from '../../data/servic
     transition: border-color var(--dur-fast) var(--ease-out-expo);
   }
 
-  /* Bright accent only clears contrast as large text, so this stays ≥ 28px. */
+  /* The card's own background is paper, not the band's paper-alt: bright accent
+     is 3.22:1 here, which clears the large-text floor at this size. */
   .card-index {
     font-family: var(--font-display);
     font-size: var(--text-h2);
@@ -99,18 +113,18 @@ import { leadServices, supportingServices, serviceHref } from '../../data/servic
     }
   }
 
-  .supporting {
+  .secondary {
     margin-top: 2.5rem;
   }
 
-  .supporting ul {
+  .secondary ul {
     display: flex;
     flex-wrap: wrap;
     gap: 0 1.5rem;
     margin-top: 0.5rem;
   }
 
-  .supporting a {
+  .secondary a {
     display: inline-flex;
     align-items: center;
     min-height: 2.75rem;

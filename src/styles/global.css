@@ -26,8 +26,11 @@
   --color-rule:       #E2DED6;  /* hairlines, borders */
 
   /* Accent — two stops, and the distinction matters */
-  --color-accent:     #FF4A1C;  /* 3.22:1 on paper (measured). GRAPHICS AND
-                                   LARGE DISPLAY TEXT ONLY. Never small text. */
+  --color-accent:     #FF4A1C;  /* 3.22:1 on paper, 2.98:1 on paper-alt,
+                                   3.05:1 on accent-wash (all measured).
+                                   GRAPHICS, AND LARGE DISPLAY TEXT ON PAPER
+                                   ONLY. Never small text; never text of any
+                                   size on paper-alt or accent-wash. */
   --color-accent-ink: #CC370F;  /* 4.88:1 on paper (measured). Small text,
                                    links, button fills. White label on this
                                    fill is 5.10:1. Thinnest margin is 4.51:1

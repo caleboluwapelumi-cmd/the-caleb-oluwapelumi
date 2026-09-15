@@ -3,11 +3,18 @@ import Page from '../layouts/Page.astro';
 import Button from '../components/ui/Button.astro';
 import Reveal from '../components/ui/Reveal.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
-import { leadServices, supportingServices, type Service } from '../data/services';
+import { leadServices, buildUpServices, supportingServices, type Service } from '../data/services';
 import { isPriced } from '../data/pricing';
 
-// Lead offers first, then supporting — the same hierarchy as the homepage grid.
-const ordered: readonly Service[] = [...leadServices, ...supportingServices];
+// Leads, then build-up, then supporting — the same hierarchy as the homepage grid.
+const ordered: readonly Service[] = [...leadServices, ...buildUpServices, ...supportingServices];
+
+// TODO(copy): tier labels.
+const tierLabel: Record<Service['tier'], string> = {
+  lead: 'Core service',
+  'build-up': 'Build-up service',
+  supporting: 'Supporting service',
+};
 ---
 
 {/* TODO(copy): meta description for the services page. */}
@@ -34,8 +41,7 @@ const ordered: readonly Service[] = [...leadServices, ...supportingServices];
         ordered.map((service) => (
           <section id={service.slug} class="service" aria-labelledby={`${service.slug}-title`}>
             <Reveal>
-              {/* TODO(copy): tier labels. */}
-              <p class="eyebrow">{service.tier === 'lead' ? 'Core service' : 'Supporting service'}</p>
+              <p class="eyebrow">{tierLabel[service.tier]}</p>
               <h2 id={`${service.slug}-title`}>{service.name}</h2>
 
               <div class="detail">

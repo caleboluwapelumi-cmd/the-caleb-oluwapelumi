@@ -18,6 +18,7 @@ export const staticOgPages: Record<string, OgPage> = {
   '/': { kicker: site.role, title: site.name },
   '/services': { kicker: 'Services', title: 'What I do' },
   '/pricing': { kicker: 'Pricing', title: 'Packages and prices' },
+  '/about': { kicker: 'About', title: site.name },
   '/work': { kicker: 'Work', title: 'Selected case studies' },
   '/insights': { kicker: 'Insights', title: 'Notes on marketing and growth' },
   '/contact': { kicker: 'Contact', title: 'Let’s talk' },

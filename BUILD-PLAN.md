@@ -340,9 +340,29 @@ Hero image and any above-fold image: `loading="eager"`, `fetchpriority="high"`, 
 
 **Verify:** Lighthouse on a production build — LCP under 2.0s, CLS under 0.05, zero accessibility violations.
 
+### Step 6.5 · About page
+
+`/about` — the one page where the brief's voice already works, so it sets the register for everything else. It is in the header and footer nav from Step 5 onward; until this step ships, that link 404s.
+
+Structure, following the About section of the original brief:
+
+1. **Opening** — "I'm Caleb Oluwapelumi", the role line, and who he actually works with. This is the place to commit to the specific audience Step 0 picked, not "businesses".
+2. **The range paragraph** — the "sometimes that means…" rhythm: strategy, positioning, a website, an edit, a campaign, a digital solution. It earns the breadth that a flat service list only asserts.
+3. **The through-line** — *Find the problem. Understand the opportunity. Build the solution.* Three beats, set as display type, not a bullet list. This is the strongest sentence in the source document; give it the whole width of the page.
+4. **How that plays out** — a short "how I work" restatement pointing at `/work` and `/services`, so the page routes rather than dead-ends.
+5. **CTA band** — the shared `CtaBand`, same as every other page.
+
+**Portrait:** this page carries the one real photograph the design direction depends on (see the design-risk note in Phase 0). Until it exists, leave the figure out entirely rather than shipping a grey placeholder box — a missing image reads as unfinished, an empty box reads as broken.
+
+**Copy is `TODO(copy)` until the brief text is transferred verbatim.** Do not paraphrase the About section into new marketing copy; the point of this step is that the existing voice survives.
+
+**Verify:** one `<h1>`, heading levels unbroken, the through-line readable with JS off, nav shows About as `aria-current="page"`.
+
 ### Step 7 · Services page
 
 One page, deep sections, anchor links from the homepage grid and footer, with a sticky in-page table of contents on desktop. Each service: what it is, who it's for, what you actually deliver, and a CTA.
+
+**Service hierarchy — fixed, do not re-derive.** Leads: Video Editing, Web Development, Paid Advertising. Brand Positioning: supporting/build-up. All others: supporting capabilities, no tier. This order lives in `src/data/services.ts` and propagates from there to the homepage grid, this page and its table of contents, the footer service column, and the `ProfessionalService` offer catalogue — change it in one place only.
 
 **SEO note worth understanding:** your keyword list spans ten distinct search intents — "web development Nigeria" and "sales strategist Nigeria" are different searchers with different problems. A single services page cannot rank well for all of them. Individual `/services/[slug]` pages, each targeting one keyword cluster with its own copy and its own case study, is the play that actually wins that traffic. It's in the Phase 3 backlog rather than v1 because it needs six to eight pages of real copy, not because it's technically hard. You'll recognise the tradeoff — it's your own discipline.
 
