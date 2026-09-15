@@ -23,10 +23,8 @@ export const site = {
   // TODO(copy): hero positioning line — pending Step 0 copy rework.
   tagline: 'TODO(copy): tagline',
   email: 'caleboluwapelumi9@gmail.com',
-  // TODO: LinkedIn profile URL not yet supplied.
-  linkedin: 'TODO-LINKEDIN-URL',
-  // TODO: WhatsApp number in international format, e.g. 234XXXXXXXXXX.
-  whatsapp: 'TODO-WHATSAPP',
+  linkedin: 'https://www.linkedin.com/in/calebemmanuel/',
+  whatsapp: '2349014482413',
   // TODO: must match `site` in astro.config.mjs once the domain is known.
   baseUrl: 'https://TODO-DOMAIN.com',
   // TODO: Cal.com username/event path not yet supplied.
