@@ -4,6 +4,7 @@ import Button from '../components/ui/Button.astro';
 import Reveal from '../components/ui/Reveal.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
 import { leadServices, supportingServices, type Service } from '../data/services';
+import { isPriced } from '../data/pricing';
 
 // Lead offers first, then supporting — the same hierarchy as the homepage grid.
 const ordered: readonly Service[] = [...leadServices, ...supportingServices];
@@ -58,7 +59,7 @@ const ordered: readonly Service[] = [...leadServices, ...supportingServices];
                 <Button href={`/contact?service=${service.slug}`} variant="primary">
                   Talk about {service.name.toLowerCase()}
                 </Button>
-                {service.priced && (
+                {isPriced(service.slug) && (
                   <Button href={`/pricing#${service.slug}`} variant="ghost">
                     See {service.name.toLowerCase()} pricing
                   </Button>

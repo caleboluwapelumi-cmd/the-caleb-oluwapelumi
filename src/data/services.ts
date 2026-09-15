@@ -23,8 +23,6 @@ export interface Service {
   whatItIs: string;
   whoItsFor: string;
   deliverables: readonly string[];
-  /** True when /pricing has packages for it; otherwise it's consultation-led. */
-  priced: boolean;
 }
 
 /*
@@ -44,7 +42,6 @@ export const services = [
     whatItIs: 'TODO(copy): what marketing strategy is',
     whoItsFor: 'TODO(copy): who marketing strategy is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
-    priced: false,
   },
   {
     slug: 'sales-strategy',
@@ -55,7 +52,6 @@ export const services = [
     whatItIs: 'TODO(copy): what sales strategy is',
     whoItsFor: 'TODO(copy): who sales strategy is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
-    priced: false,
   },
   {
     slug: 'brand-positioning',
@@ -66,7 +62,6 @@ export const services = [
     whatItIs: 'TODO(copy): what brand positioning is',
     whoItsFor: 'TODO(copy): who brand positioning is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
-    priced: false,
   },
   {
     slug: 'web-development',
@@ -77,7 +72,6 @@ export const services = [
     whatItIs: 'TODO(copy): what web development is',
     whoItsFor: 'TODO(copy): who web development is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
-    priced: true,
   },
   {
     slug: 'paid-advertising',
@@ -88,7 +82,6 @@ export const services = [
     whatItIs: 'TODO(copy): what paid advertising is',
     whoItsFor: 'TODO(copy): who paid advertising is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
-    priced: true,
   },
   {
     slug: 'video-editing',
@@ -99,7 +92,6 @@ export const services = [
     whatItIs: 'TODO(copy): what video editing is',
     whoItsFor: 'TODO(copy): who video editing is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
-    priced: true,
   },
   {
     slug: 'business-consultation',
@@ -110,7 +102,6 @@ export const services = [
     whatItIs: 'TODO(copy): what business consultation is',
     whoItsFor: 'TODO(copy): who business consultation is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
-    priced: false,
   },
   {
     slug: 'digital-solutions',
@@ -121,7 +112,6 @@ export const services = [
     whatItIs: 'TODO(copy): what digital solutions are',
     whoItsFor: 'TODO(copy): who digital solutions are for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
-    priced: false,
   },
 ] as const satisfies readonly Service[];
 
