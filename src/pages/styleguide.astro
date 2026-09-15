@@ -11,6 +11,7 @@ import themeCss from '../styles/global.css?raw';
 import Button from '../components/ui/Button.astro';
 import Tag from '../components/ui/Tag.astro';
 import Rule from '../components/ui/Rule.astro';
+import Reveal from '../components/ui/Reveal.astro';
 
 type TokenMap = Map<string, string>;
 
@@ -333,6 +334,19 @@ const tagVariants = ['neutral', 'accent'] as const;
         <Rule />
         <p class="sg-meta">accent</p>
         <Rule accent />
+      </section>
+
+      <section class="sg-section" aria-labelledby="reveal">
+        <h2 id="reveal">Reveal</h2>
+        <p class="sg-lede">
+          Fades up as it scrolls into view. Stays static with JS off or reduced motion on.
+        </p>
+        <Reveal><p class="sg-meta">Single reveal</p></Reveal>
+        <Reveal as="ul" stagger class="sg-list" role="list">
+          <li>Staggered child 1</li>
+          <li>Staggered child 2</li>
+          <li>Staggered child 3</li>
+        </Reveal>
       </section>
 
       <section class="sg-section" aria-labelledby="prose">

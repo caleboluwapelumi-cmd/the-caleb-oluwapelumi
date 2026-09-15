@@ -41,6 +41,13 @@ const seo = Astro.props;
   </body>
 </html>
 
+<script>
+  import { initReveal } from '../lib/reveal';
+
+  // Fires on first load and after every view-transition navigation.
+  document.addEventListener('astro:page-load', initReveal);
+</script>
+
 <style is:global>
   /* Keeps anchor targets, including the skip link's, clear of the sticky header. */
   html {

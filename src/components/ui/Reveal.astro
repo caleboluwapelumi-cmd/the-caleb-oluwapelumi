@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Tag = 'div' | 'section' | 'ul' | 'ol' | 'article' | 'header';
+
+export interface Props extends HTMLAttributes<'div'> {
+  as?: Tag;
+  /** Reveal each direct child in turn instead of the wrapper as a whole. */
+  stagger?: boolean;
+}
+
+// Never wrap above-the-fold content: revealing it delays LCP.
+const { as: Element = 'div', stagger = false, ...rest } = Astro.props;
+const attrs = stagger ? { 'data-reveal-stagger': '' } : { 'data-reveal': '' };
+---
+
+<Element {...attrs} {...rest}><slot /></Element>

@@ -43,6 +43,8 @@
   --dur-fast: 180ms;
   --dur-base: 420ms;
   --dur-slow: 800ms;
+  --dur-stagger: 60ms;  /* delay between siblings in a revealed grid */
+  --dur-view: 200ms;    /* view-transition cross-fade */
 
   /* Type scale — fluid, no breakpoint jumps */
   --text-display: clamp(2.75rem, 1.6rem + 5.2vw, 6rem);   /* hero */
@@ -224,6 +226,51 @@
   .prose hr {
     margin-block: 2.5em;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Layout helpers
+--------------------------------------------------------------------------- */
+@layer components {
+  .container {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveal — src/lib/reveal.ts. The hidden state only exists under
+   .reveal-ready, which the script adds. If JS never runs, nothing is hidden.
+--------------------------------------------------------------------------- */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--dur-base) var(--ease-out-expo),
+    transform var(--dur-base) var(--ease-out-expo);
+  transition-delay: calc(var(--reveal-index, 0) * var(--dur-stagger));
+}
+
+.reveal-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-view);
 }
 
 /* ---------------------------------------------------------------------------
