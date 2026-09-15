@@ -17,8 +17,11 @@ const { items } = Astro.props;
     <section class="section" aria-labelledby="work-title">
       <div class="shell">
         <Reveal class="head">
-          {/* TODO(copy): section eyebrow and heading. */}
-          <SectionHeader id="work-title" eyebrow="Selected work" title="TODO(copy): featured work heading" />
+          <SectionHeader
+            id="work-title"
+            eyebrow="Selected work"
+            title="Every project starts with a business problem, not a deliverable."
+          />
         </Reveal>
 
         <Reveal as="ul" stagger class="grid" role="list">

@@ -10,9 +10,13 @@ export interface PricingTier {
   whoItsFor: string;
   includes: readonly string[];
   turnaround: string;
-  /** Set per market, not converted — a converted £ figure drifts with the naira. */
-  ngn: Amount;
-  gbp: Amount;
+  /**
+   * Single reference figure in USD. Deliberately one currency: the work is
+   * remote and scoped per project, so a per-market price table implied a
+   * precision the quote doesn't have. Every figure is a placeholder until the
+   * real quote is scoped — see `PRICING_NOTE`.
+   */
+  usd: Amount;
   /** True when scope varies and the figure is a starting price. */
   from: boolean;
 }
@@ -27,16 +31,19 @@ export interface PricedService {
   tiers: readonly PricingTier[];
 }
 
+/** Stands under the pricing intro, on every tier table. */
+export const PRICING_NOTE =
+  'Figures are placeholders — final quote is scoped to your project and currency.';
+
 // TODO(copy): every tier below — names, audience, inclusions, turnaround,
-// both prices, and whether each is a "from" price.
+// the USD figure, and whether each is a "from" price.
 const todoTier = (id: string): PricingTier => ({
   id,
   name: 'TODO(copy): tier name',
   whoItsFor: 'TODO(copy): who this tier is for',
   includes: ['TODO(copy): inclusion', 'TODO(copy): inclusion', 'TODO(copy): inclusion'],
   turnaround: 'TODO(copy): turnaround',
-  ngn: 'TODO',
-  gbp: 'TODO',
+  usd: 'TODO',
   from: false,
 });
 
@@ -48,14 +55,13 @@ export const pricing: readonly PricedService[] = [
 
 export const isPriced = (slug: ServiceSlug): boolean => pricing.some((p) => p.service === slug);
 
-const formatters = {
-  ngn: new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }),
-  gbp: new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }),
-};
-
-const symbols = { ngn: '₦', gbp: '£' };
+const usd = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
 
 /** Formatted at build time; unfilled amounts render as a visible TODO. */
-export function formatAmount(amount: Amount, currency: 'ngn' | 'gbp'): string {
-  return amount === 'TODO' ? `${symbols[currency]} TODO(copy)` : formatters[currency].format(amount);
+export function formatAmount(amount: Amount): string {
+  return amount === 'TODO' ? '$ TODO(copy)' : usd.format(amount);
 }

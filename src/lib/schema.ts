@@ -18,12 +18,12 @@ export const serviceOptions = [
   { value: NOT_SURE, label: 'Not sure yet' },
 ];
 
-// TODO(copy): budget ranges. Real figures only — these qualify the lead.
+// Single-currency USD brackets, matching the USD figures on /pricing.
 export const budgetOptions = [
-  { value: 'range-1', label: 'TODO(copy): budget range 1' },
-  { value: 'range-2', label: 'TODO(copy): budget range 2' },
-  { value: 'range-3', label: 'TODO(copy): budget range 3' },
-  { value: 'range-4', label: 'TODO(copy): budget range 4' },
+  { value: 'under-100', label: 'Under $100' },
+  { value: '100-300', label: '$100–300' },
+  { value: '300-600', label: '$300–600' },
+  { value: '600-plus', label: '$600+' },
   { value: NOT_SURE, label: 'Not sure yet' },
 ];
 

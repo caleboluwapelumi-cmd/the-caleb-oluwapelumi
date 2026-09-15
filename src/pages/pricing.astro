@@ -2,47 +2,21 @@
 import Page from '../layouts/Page.astro';
 import Button from '../components/ui/Button.astro';
 import Reveal from '../components/ui/Reveal.astro';
-import { pricing, formatAmount } from '../data/pricing';
+import { pricing, formatAmount, PRICING_NOTE } from '../data/pricing';
 import { getService } from '../data/services';
-
-// TODO(copy): currency option labels.
-const currencyOptions = [
-  { value: 'both', label: 'Both' },
-  { value: 'ngn', label: '₦ NGN' },
-  { value: 'gbp', label: '£ GBP' },
-] as const;
 ---
 
 {/* TODO(copy): meta description for the pricing page. */}
 <Page title="Pricing" description="TODO(copy): pricing page meta description">
   <Fragment slot="lede">
-    <p>TODO(copy): pricing intro — packages for web development, video editing and paid ads</p>
-    {/* TODO(copy): plain-language note on "from" prices and per-market pricing. */}
-    <p>TODO(copy): note that “from” prices vary with scope, and ₦ and £ are set per market</p>
+    <p>
+      Every project is different, so pricing depends on scope, complexity, and requirements. These
+      packages are a starting point.
+    </p>
+    <p class="note">{PRICING_NOTE}</p>
   </Fragment>
 
-  <div class="pricing" data-pricing>
-    {/* Hidden until the script runs: with JS off both currencies simply stay visible. */}
-    <fieldset class="currency" data-currency-toggle hidden>
-      {/* TODO(copy): toggle legend. */}
-      <legend class="eyebrow">Show prices in</legend>
-      <div class="options">
-        {
-          currencyOptions.map((option) => (
-            <label class="option">
-              <input
-                type="radio"
-                name="currency"
-                value={option.value}
-                checked={option.value === 'both'}
-              />
-              <span>{option.label}</span>
-            </label>
-          ))
-        }
-      </div>
-    </fieldset>
-
+  <div class="pricing">
     {
       pricing.map(({ service: slug, tiers }) => {
         const service = getService(slug);
@@ -54,10 +28,8 @@ const currencyOptions = [
                 <li class="tier">
                   <h3>{tier.name}</h3>
                   <p class="price">
-                    {/* TODO(copy): "From" label. */}
                     {tier.from && <span class="from">From</span>}
-                    <span class="amount amount--ngn">{formatAmount(tier.ngn, 'ngn')}</span>
-                    <span class="amount amount--gbp">{formatAmount(tier.gbp, 'gbp')}</span>
+                    <span class="amount">{formatAmount(tier.usd)}</span>
                   </p>
                   <p class="who">{tier.whoItsFor}</p>
                   <ul class="includes">
@@ -97,108 +69,10 @@ const currencyOptions = [
   </div>
 </Page>
 
-<script>
-  const KEY = 'pricing-currency';
-  type Currency = 'both' | 'ngn' | 'gbp';
-  const isCurrency = (v: unknown): v is Currency => v === 'both' || v === 'ngn' || v === 'gbp';
-
-  function readStored(): Currency {
-    try {
-      const value = localStorage.getItem(KEY);
-      return isCurrency(value) ? value : 'both';
-    } catch {
-      return 'both';
-    }
-  }
-
-  function initCurrencyToggle() {
-    const container = document.querySelector<HTMLElement>('[data-pricing]');
-    const toggle = document.querySelector<HTMLFieldSetElement>('[data-currency-toggle]');
-    if (!container || !toggle) return;
-
-    const apply = (currency: Currency) => {
-      container.dataset.currency = currency;
-      const radio = toggle.querySelector<HTMLInputElement>(`input[value="${currency}"]`);
-      if (radio) radio.checked = true;
-    };
-
-    apply(readStored());
-    toggle.hidden = false;
-    toggle.addEventListener('change', (event) => {
-      const value = (event.target as HTMLInputElement).value;
-      if (!isCurrency(value)) return;
-      apply(value);
-      try {
-        localStorage.setItem(KEY, value);
-      } catch {
-        // Storage blocked (private mode): the choice just isn't remembered.
-      }
-    });
-  }
-
-  document.addEventListener('astro:page-load', initCurrencyToggle);
-</script>
-
 <style>
-  .currency {
-    margin-bottom: 3rem;
-    padding: 0;
-    border: 0;
-  }
-
-  .currency legend {
-    margin-bottom: 0.5rem;
-  }
-
-  .options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .option {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.75rem;
-    padding: 0.5rem 1.125rem;
-    border: 2px solid var(--color-rule);
-    border-radius: 999px;
-    font-size: var(--text-small);
-    font-weight: 600;
-    color: var(--color-ink);
-    cursor: pointer;
-    transition:
-      border-color var(--dur-fast) var(--ease-out-expo),
-      background-color var(--dur-fast) var(--ease-out-expo),
-      color var(--dur-fast) var(--ease-out-expo);
-  }
-
-  /* The native radio stays in the accessibility tree and keyboard order;
-     the pill is its visual. */
-  .option input {
-    position: absolute;
-    inset: -2px;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .option:has(input:checked) {
-    border-color: var(--color-ink);
-    background-color: var(--color-ink);
-    color: var(--color-paper);
-  }
-
-  .option:has(input:focus-visible) {
-    outline: 2px solid var(--color-accent-ink);
-    outline-offset: 2px;
-  }
-
-  @media (hover: hover) {
-    .option:hover {
-      border-color: var(--color-ink);
-    }
+  /* Sits on paper, so accent-ink rather than bare accent. */
+  .note {
+    color: var(--color-accent-ink);
   }
 
   .service + .service {
@@ -246,22 +120,6 @@ const currencyOptions = [
     font-family: var(--font-display);
     font-size: var(--text-h3);
     line-height: 1.2;
-    color: var(--color-ink);
-  }
-
-  /* ₦ leads; £ sits beneath it, smaller, when both are shown. */
-  .amount--gbp {
-    font-size: var(--text-body);
-    color: var(--color-ink-body);
-  }
-
-  [data-currency='ngn'] .amount--gbp,
-  [data-currency='gbp'] .amount--ngn {
-    display: none;
-  }
-
-  [data-currency='gbp'] .amount--gbp {
-    font-size: var(--text-h3);
     color: var(--color-ink);
   }
 

@@ -7,41 +7,43 @@ import CtaBand from '../components/sections/CtaBand.astro';
 import { site } from '../data/site';
 
 /*
- * Structure follows BUILD-PLAN.md Step 6.5, which mirrors the About section of
- * the original brief. Every string below is a placeholder on purpose: the brief
- * copy is transferred verbatim, not paraphrased, so the voice survives.
+ * Copy is transferred verbatim from the brief, not paraphrased, so the voice
+ * survives. The three beats below are the brief's own closing line.
  */
+const throughLine = ['Strategy.', 'Execution.', 'Results.'];
 
-// TODO(copy): the three beats of the through-line, verbatim from the brief.
-const throughLine = [
-  'TODO(copy): find the problem',
-  'TODO(copy): understand the opportunity',
-  'TODO(copy): build the solution',
+// Card titles come from the brief; the bodies were never supplied.
+const whatIBring = [
+  { title: 'Technical Thinking', body: 'TODO(copy): Technical Thinking description, verbatim from the brief' },
+  { title: 'Creative Execution', body: 'TODO(copy): Creative Execution description, verbatim from the brief' },
+  { title: 'Business Understanding', body: 'TODO(copy): Business Understanding description, verbatim from the brief' },
+  { title: 'Problem Solving', body: 'TODO(copy): Problem Solving description, verbatim from the brief' },
 ];
 ---
 
 {/* TODO(copy): meta description for the about page. */}
-<Page
-  title="About"
-  heading="TODO(copy): about page heading"
-  description="TODO(copy): about page meta description"
->
-  {/* TODO(copy): opening line — "I'm Caleb Oluwapelumi…" plus the audience. */}
-  <p slot="lede">TODO(copy): about page opening — who Caleb is and who he works with</p>
+<Page title="About" description="TODO(copy): about page meta description">
+  <p slot="lede">
+    I’m Caleb Oluwapelumi. I work across technology, digital media, marketing, and business
+    solutions, helping businesses turn ideas and problems into practical digital execution. I’m
+    based in Lagos, Nigeria — but the work travels. I work with businesses wherever they are.
+  </p>
 
   <div class="about">
-    <section class="intro" aria-labelledby="about-intro">
-      <Reveal>
-        {/* TODO(copy): section heading. */}
-        <h2 id="about-intro">TODO(copy): intro section heading</h2>
-        <div class="prose">
-          {/* TODO(copy): the "sometimes that means…" range paragraph, verbatim. */}
-          <p>TODO(copy): the range paragraph — strategy, positioning, a website, an edit, a campaign, a digital solution</p>
-          {/* TODO(copy): second paragraph — how the range holds together. */}
-          <p>TODO(copy): second intro paragraph</p>
-        </div>
-      </Reveal>
-    </section>
+    {/* No section heading here on purpose: this is the lede continuing, and the
+        brief supplies no heading to put above it. */}
+    <Reveal class="prose">
+      <p>
+        My work sits at the intersection of technology, creativity, and business. I build websites.
+        I edit videos. I run paid campaigns. I develop digital solutions. I help businesses think
+        through marketing and growth problems. What connects all of it is problem solving.
+      </p>
+      <p>
+        I don’t believe businesses always need more complexity. They need the right solution for the
+        problem in front of them. That’s how I approach my work: understand the objective, identify
+        what is needed, build it properly, and improve it where necessary.
+      </p>
+    </Reveal>
 
     <Rule accent />
 
@@ -49,7 +51,6 @@ const throughLine = [
         list so the three beats keep their order without JS or decoration. */}
     <section class="through-line" aria-labelledby="about-through-line">
       <Reveal>
-        {/* TODO(copy): label above the three beats. */}
         <h2 id="about-through-line" class="eyebrow">The common thread</h2>
         <ol class="beats" role="list">
           {
@@ -66,16 +67,20 @@ const throughLine = [
 
     <Rule />
 
-    <section class="routes" aria-labelledby="about-routes">
+    <section class="bring" aria-labelledby="about-bring">
       <Reveal>
-        {/* TODO(copy): section heading. */}
-        <h2 id="about-routes">TODO(copy): how that plays out heading</h2>
-        <div class="prose">
-          {/* TODO(copy): short restatement of how the work runs. */}
-          <p>TODO(copy): how the work actually runs, in two or three sentences</p>
-        </div>
+        <h2 id="about-bring">What I Bring</h2>
+        <ul class="bring-grid" role="list">
+          {
+            whatIBring.map((item) => (
+              <li class="bring-card">
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </li>
+            ))
+          }
+        </ul>
         <div class="actions">
-          {/* TODO(copy): CTA labels. */}
           <Button href="/work" variant="primary">See the work</Button>
           <Button href="/services" variant="ghost">What I do</Button>
         </div>
@@ -86,7 +91,6 @@ const throughLine = [
 
     <section class="elsewhere" aria-labelledby="about-elsewhere">
       <Reveal>
-        {/* TODO(copy): section heading. */}
         <h2 id="about-elsewhere" class="eyebrow">Elsewhere</h2>
         <ul role="list" class="links">
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
@@ -112,8 +116,7 @@ const throughLine = [
     margin-top: 1.25rem;
   }
 
-  .intro h2,
-  .routes h2 {
+  .bring h2 {
     margin-bottom: 1.5rem;
   }
 
@@ -150,6 +153,27 @@ const throughLine = [
     line-height: 1.25;
     color: var(--color-ink);
     text-wrap: balance;
+  }
+
+  .bring-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  }
+
+  .bring-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    border: 1px solid var(--color-rule);
+    border-radius: 0.5rem;
+    background-color: var(--color-paper-alt);
+  }
+
+  .bring-card h3 {
+    font-size: var(--text-h3);
+    line-height: 1.2;
   }
 
   .actions {

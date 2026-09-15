@@ -3,7 +3,13 @@ import Page from '../layouts/Page.astro';
 import Button from '../components/ui/Button.astro';
 import Reveal from '../components/ui/Reveal.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
-import { leadServices, buildUpServices, supportingServices, type Service } from '../data/services';
+import {
+  leadServices,
+  buildUpServices,
+  supportingServices,
+  servicesClosing,
+  type Service,
+} from '../data/services';
 import { isPriced } from '../data/pricing';
 
 // Leads, then build-up, then supporting — the same hierarchy as the homepage grid.
@@ -77,6 +83,12 @@ const tierLabel: Record<Service['tier'], string> = {
       }
     </div>
   </div>
+
+  <Reveal class="closing">
+    <p class="closing-line">{servicesClosing.line}</p>
+    <Button href="/contact" variant="primary">{servicesClosing.cta}</Button>
+  </Reveal>
+
   <CtaBand slot="after" id="services-cta" />
 </Page>
 
@@ -160,5 +172,21 @@ const tierLabel: Record<Service['tier'], string> = {
     flex-wrap: wrap;
     gap: 0.75rem 1rem;
     margin-top: 2rem;
+  }
+
+  .closing {
+    margin-top: clamp(3.5rem, 3rem + 2vw, 5rem);
+    padding-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .closing-line {
+    max-width: 40ch;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: 1.2;
+    color: var(--color-ink);
+    text-wrap: balance;
   }
 </style>

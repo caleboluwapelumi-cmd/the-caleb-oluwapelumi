@@ -8,13 +8,13 @@ import { site } from '../../data/site';
   <div class="shell hero-inner">
     <p class="eyebrow">{site.role}</p>
     <h1 id="hero-title">{site.name}</h1>
-    {/* TODO(copy): positioning line — pending Step 0. Lives in site.ts as `tagline`. */}
     <p class="hero-line">{site.tagline}</p>
-    {/* TODO(copy): hero sub-paragraph naming the specific audience. */}
-    <p class="hero-sub measure">TODO(copy): hero sub-paragraph</p>
+    <p class="hero-sub measure">
+      Tell me what your business needs, and I’ll build it with you: a site that converts, video that
+      gets watched, ads that bring in the right people. Wherever you’re based.
+    </p>
     <div class="hero-actions">
-      {/* TODO(copy): CTA labels. */}
-      <Button href="/contact" variant="primary">Let’s Talk</Button>
+      <Button href="/contact" variant="primary">Start a Project</Button>
       <Button href="/work" variant="secondary">See the work</Button>
     </div>
     {/* TODO(photo): portrait. Use <Image> with loading="eager" and fetchpriority="high". */}
@@ -33,8 +33,10 @@ import { site } from '../../data/site';
     letter-spacing: -0.02em;
   }
 
+  /* Wider than the old 24ch: the real positioning line is a full sentence, and
+     a narrow measure turned it into a six-line column at display size. */
   .hero-line {
-    max-width: 24ch;
+    max-width: 34ch;
     margin-top: 1.5rem;
     font-family: var(--font-display);
     font-size: var(--text-h2);

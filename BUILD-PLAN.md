@@ -147,7 +147,7 @@ caleb-site/
 │   │   └── insights/             # blog posts (.md)
 │   ├── data/
 │   │   ├── services.ts           # typed service data, single source of truth
-│   │   ├── pricing.ts            # typed packages, NGN + GBP amounts
+│   │   ├── pricing.ts            # typed packages, single USD placeholder amounts
 │   │   └── site.ts               # name, socials, WhatsApp number, base URL
 │   ├── components/
 │   │   ├── layout/  Header.astro Footer.astro MobileNav.astro
@@ -164,7 +164,7 @@ caleb-site/
 │   │   ├── index.astro
 │   │   ├── about.astro
 │   │   ├── services.astro
-│   │   ├── pricing.astro         # packages, NGN + GBP
+│   │   ├── pricing.astro         # packages, single USD reference figure
 │   │   ├── contact.astro         # Cal.com booking embed + form
 │   │   ├── work/        index.astro  [...slug].astro
 │   │   ├── insights/    index.astro  [...slug].astro
@@ -364,19 +364,19 @@ One page, deep sections, anchor links from the homepage grid and footer, with a 
 
 **Service hierarchy — fixed, do not re-derive.** Leads: Video Editing, Web Development, Paid Advertising. Brand Positioning: supporting/build-up. All others: supporting capabilities, no tier. This order lives in `src/data/services.ts` and propagates from there to the homepage grid, this page and its table of contents, the footer service column, and the `ProfessionalService` offer catalogue — change it in one place only.
 
-**SEO note worth understanding:** your keyword list spans ten distinct search intents — "web development Nigeria" and "sales strategist Nigeria" are different searchers with different problems. A single services page cannot rank well for all of them. Individual `/services/[slug]` pages, each targeting one keyword cluster with its own copy and its own case study, is the play that actually wins that traffic. It's in the Phase 3 backlog rather than v1 because it needs six to eight pages of real copy, not because it's technically hard. You'll recognise the tradeoff — it's your own discipline.
+**SEO note worth understanding:** the keyword list (`site.seoKeywords`, published as `knowsAbout` on the `ProfessionalService` node) is skill-and-intent based with no country qualifier — "freelance web developer", "video editor for brands", "paid ads specialist", "lead generation campaigns" and the rest. It still spans ten distinct search intents: a searcher looking for a video editor and one looking for an ads specialist have different problems. A single services page cannot rank well for all of them. Individual `/services/[slug]` pages, each targeting one keyword cluster with its own copy and its own case study, is the play that actually wins that traffic. It's in the Phase 3 backlog rather than v1 because it needs six to eight pages of real copy, not because it's technically hard.
 
 ### Step 7.5 · Pricing page
 
-`/pricing` — packages for the three productisable services: **web development**, **video editing**, and **paid ads**. Package data lives in `src/data/pricing.ts` (typed, like `services.ts`): name, who it's for, what's included, turnaround, and an amount in both `ngn` and `gbp`. Every figure starts as a visible `TODO(copy)` — no invented prices.
+`/pricing` — packages for the three productisable services: **web development**, **video editing**, and **paid ads**. Package data lives in `src/data/pricing.ts` (typed, like `services.ts`): name, who it's for, what's included, turnaround, and a single `usd` amount. Every figure starts as a visible `TODO(copy)` — no invented prices.
 
 Each service gets a small set of tiers as cards (name, price, inclusions list, a CTA into `/contact` with the service preselected via query string). Mark prices "from" where scope varies, and say so plainly.
 
 **A "Not sure what you need?" card** closes the grid, routing to the booking embed on `/contact` (`/contact#book`). Consultation-led offers (strategy, positioning) don't get a price card — they route here.
 
-**Currency: NGN and GBP, because the audience is Nigerian and UK SMEs.** Default is both shown together on every card (₦ first, £ beneath) — zero JS, works with scripts off, and nobody has to hunt for their currency. An optional ₦/£ toggle is a progressive enhancement only: a `role="radiogroup"` of two buttons that toggles a class on the grid container, remembered in `localStorage`; with JS off the toggle is hidden and both currencies stay visible. Format with `Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' })` / `('en-GB', …'GBP')` at build time. Set prices per market rather than converting at a live rate — a converted £ figure looks arbitrary and drifts with the naira.
+**Currency: one USD reference figure, not a per-market table.** Superseded 2026-09-16 — the earlier NGN + GBP pairing and its ₦/£ `localStorage` toggle are removed. The work is remote and quoted per project, so two market prices implied a precision the quote doesn't have, and the toggle was JS plus persisted state for a decision nobody needed to make. One `usd` figure per tier, formatted with `Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })` at build time, rendered as "From $X" where scope varies and "$X" where it doesn't. **Every figure is an explicit placeholder, not a conversion** — a standing note under the pricing intro says so in plain words: "Figures are placeholders — final quote is scoped to your project and currency." The budget brackets on `/contact` use the same USD scale.
 
-**Verify:** both currencies readable with JS off; toggle (if built) keyboard-operable and announces its state; cards stack cleanly at 320px.
+**Verify:** prices readable with JS off — the page now ships no JS at all; cards stack cleanly at 320px.
 
 ### Step 8 · Work
 
@@ -432,7 +432,7 @@ Form fields: name, email, business name, "what do you need" (select, mirroring y
 
 Deploy to Vercel, connect the repo, add all four environment variables in the dashboard (Production and Preview). Point the domain; Vercel handles SSL. Verify the sending domain in Resend — SPF and DKIM DNS records — **and wait for them to propagate before announcing the site**, or your first real enquiry lands in spam.
 
-Add Vercel Analytics or Plausible. Submit the sitemap to Google Search Console. Set up Google Business Profile if you're targeting local Nigerian search — your keyword list says you are.
+Add Vercel Analytics or Plausible. Submit the sitemap to Google Search Console. The keyword list is deliberately country-agnostic and `areaServed` is worldwide, so a Google Business Profile is optional rather than implied — set one up only if local Lagos search turns out to be a channel worth having.
 
 **Final verification pass:**
 

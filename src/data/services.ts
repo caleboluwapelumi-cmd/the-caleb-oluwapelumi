@@ -6,7 +6,7 @@ export type ServiceSlug =
   | 'paid-advertising'
   | 'brand-positioning'
   | 'marketing-strategy'
-  | 'sales-strategy'
+  | 'content-strategy'
   | 'business-consultation'
   | 'digital-solutions';
 
@@ -43,7 +43,8 @@ export const services = [
     name: 'Video Editing',
     tier: 'lead',
     category: 'creative',
-    summary: 'TODO(copy): video editing summary',
+    summary:
+      'I turn raw footage and ideas into polished, platform-ready videos — pacing, captions, transitions, presentation. For brands, creators, and social teams that need content people actually watch.',
     whatItIs: 'TODO(copy): what video editing is',
     whoItsFor: 'TODO(copy): who video editing is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
@@ -53,7 +54,8 @@ export const services = [
     name: 'Web Development',
     tier: 'lead',
     category: 'web',
-    summary: 'TODO(copy): web development summary',
+    summary:
+      'Modern, responsive websites built around what the site needs to do — structure, UX, performance, conversion. For businesses that need visitors to become enquiries.',
     whatItIs: 'TODO(copy): what web development is',
     whoItsFor: 'TODO(copy): who web development is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
@@ -63,7 +65,8 @@ export const services = [
     name: 'Paid Advertising',
     tier: 'lead',
     category: 'marketing',
-    summary: 'TODO(copy): paid advertising summary',
+    summary:
+      'Targeted campaigns end to end: strategy, audience, creative, setup, tracking, optimisation. For businesses that want a consistent source of leads, not just clicks.',
     whatItIs: 'TODO(copy): what paid advertising is',
     whoItsFor: 'TODO(copy): who paid advertising is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
@@ -73,7 +76,8 @@ export const services = [
     name: 'Brand Positioning',
     tier: 'build-up',
     category: 'marketing',
-    summary: 'TODO(copy): brand positioning summary',
+    summary:
+      'Clarify what you stand for, who you serve, and why people should choose you over the alternative.',
     whatItIs: 'TODO(copy): what brand positioning is',
     whoItsFor: 'TODO(copy): who brand positioning is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
@@ -83,19 +87,20 @@ export const services = [
     name: 'Marketing Strategy',
     tier: 'supporting',
     category: 'marketing',
-    summary: 'TODO(copy): marketing strategy summary',
+    summary: 'Turning business goals into a plan: audience, channels, content, acquisition.',
     whatItIs: 'TODO(copy): what marketing strategy is',
     whoItsFor: 'TODO(copy): who marketing strategy is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
   },
   {
-    slug: 'sales-strategy',
-    name: 'Sales Strategy',
+    slug: 'content-strategy',
+    name: 'Content Strategy',
     tier: 'supporting',
     category: 'marketing',
-    summary: 'TODO(copy): sales strategy summary',
-    whatItIs: 'TODO(copy): what sales strategy is',
-    whoItsFor: 'TODO(copy): who sales strategy is for',
+    summary:
+      'What to say, who to say it to, and how to make content a business asset instead of a chore.',
+    whatItIs: 'TODO(copy): what content strategy is',
+    whoItsFor: 'TODO(copy): who content strategy is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
   },
   {
@@ -103,7 +108,8 @@ export const services = [
     name: 'Business Consultation',
     tier: 'supporting',
     category: 'solutions',
-    summary: 'TODO(copy): business consultation summary',
+    summary:
+      'A sounding board for a business, marketing, sales, or digital problem you’re trying to think through.',
     whatItIs: 'TODO(copy): what business consultation is',
     whoItsFor: 'TODO(copy): who business consultation is for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
@@ -113,7 +119,8 @@ export const services = [
     name: 'Digital Solutions',
     tier: 'supporting',
     category: 'solutions',
-    summary: 'TODO(copy): digital solutions summary',
+    summary:
+      'Practical systems for specific problems — workflow, operations, the repetitive stuff that shouldn’t be manual anymore.',
     whatItIs: 'TODO(copy): what digital solutions are',
     whoItsFor: 'TODO(copy): who digital solutions are for',
     deliverables: ['TODO(copy): deliverable', 'TODO(copy): deliverable', 'TODO(copy): deliverable'],
@@ -131,3 +138,9 @@ export function getService(slug: ServiceSlug): Service {
   if (!service) throw new Error(`Unknown service: ${slug}`);
   return service;
 }
+
+/** Closing line under the services grid, for people whose need isn't listed. */
+export const servicesClosing = {
+  line: 'Need something specific? Tell me what you’re building or solving.',
+  cta: 'Tell Me What You Need',
+} as const;

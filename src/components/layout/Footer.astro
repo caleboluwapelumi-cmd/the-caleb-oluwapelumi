@@ -50,6 +50,8 @@ const year = new Date().getFullYear();
       </section>
     </div>
 
+    <p class="footer-line">Digital Solutions • Web Development • Video • Advertising • Marketing.</p>
+
     <p class="copyright">
       <small>&copy; {year} {site.name}</small>
     </p>
@@ -111,8 +113,14 @@ const year = new Date().getFullYear();
     }
   }
 
-  .copyright {
+  .footer-line {
     margin-top: 3rem;
+    font-size: var(--text-small);
+    color: var(--color-ink-body);
+  }
+
+  .copyright {
+    margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--color-rule);
     color: var(--color-ink-muted);

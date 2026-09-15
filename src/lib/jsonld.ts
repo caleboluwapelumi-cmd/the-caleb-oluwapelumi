@@ -47,10 +47,10 @@ export function professionalServiceSchema(
     email: `mailto:${site.email}`,
     founder: { '@id': personId(siteUrl) },
     address: { '@type': 'PostalAddress', addressCountry: 'NG' },
-    areaServed: [
-      { '@type': 'Country', name: 'Nigeria' },
-      { '@type': 'Country', name: 'United Kingdom' },
-    ],
+    // The work is remote and sold on skill, not proximity — no country restriction.
+    // Person.addressCountry stays NG on the Person node, because that one is factual.
+    areaServed: { '@type': 'Place', name: 'Worldwide' },
+    knowsAbout: site.seoKeywords,
     ...(services.length > 0 && {
       hasOfferCatalog: {
         '@type': 'OfferCatalog',

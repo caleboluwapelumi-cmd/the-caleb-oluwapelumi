@@ -12,6 +12,8 @@ import {
 export interface Props {
   /** Page name; rendered as "Title · Caleb Oluwapelumi". Omit on the homepage. */
   title?: string;
+  /** Overrides the composed document title outright. For the homepage. */
+  fullTitle?: string;
   description?: string;
   /** Path or absolute URL. Defaults to this page's generated OG image. */
   image?: string;
@@ -24,8 +26,8 @@ export interface Props {
 
 const {
   title,
-  // TODO(copy): default meta description — pending Step 0 copy rework.
-  description = `${site.name}, ${site.role}.`,
+  fullTitle,
+  description = site.description,
   image,
   imageAlt,
   type = 'website',
@@ -34,7 +36,7 @@ const {
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL(site.baseUrl);
-const documentTitle = title ? `${title} · ${site.name}` : site.name;
+const documentTitle = fullTitle ?? (title ? `${title} · ${site.name}` : site.name);
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 // Pages with a generated card (src/pages/og/[...route].png.ts) fall back to it.
 const resolvedImage = image ?? (hasStaticOgImage(Astro.url.pathname) ? ogImagePath(Astro.url.pathname) : undefined);
