@@ -12,7 +12,6 @@ export const TURNSTILE_FIELD = 'cf-turnstile-response';
 
 const NOT_SURE = 'not-sure';
 
-// TODO(copy): "not sure" option label.
 export const serviceOptions = [
   ...services.map((s) => ({ value: s.slug as string, label: s.name })),
   { value: NOT_SURE, label: 'Not sure yet' },
@@ -30,18 +29,29 @@ export const budgetOptions = [
 const values = (options: { value: string }[]) =>
   options.map((o) => o.value) as [string, ...string[]];
 
-// TODO(copy): validation messages.
+/*
+ * Caleb supplied the message for name, email, service and message. The
+ * max-length and budget messages are ours — they cover states he didn't write
+ * copy for, and the length caps are a schema constraint, not a content choice.
+ */
+const EMAIL_MESSAGE = 'Please enter a valid email address.';
+
 export const contactSchema = z.object({
-  name: z.string().trim().min(1, 'Enter your name.').max(100, 'Keep your name under 100 characters.'),
+  name: z
+    .string()
+    .trim()
+    .min(1, 'Please enter your name.')
+    .max(100, 'Keep your name under 100 characters.'),
   email: z
     .string()
     .trim()
-    .min(1, 'Enter your email address.')
-    .email('Enter a valid email address, like name@example.com.')
+    // Empty and malformed both get the same line, so the field has one message.
+    .min(1, EMAIL_MESSAGE)
+    .email(EMAIL_MESSAGE)
     .max(254, 'That email address is too long.'),
   business: z.string().trim().max(150, 'Keep the business name under 150 characters.').default(''),
   service: z.enum(values(serviceOptions), {
-    errorMap: () => ({ message: 'Choose what you need help with.' }),
+    errorMap: () => ({ message: 'Please select what you need help with.' }),
   }),
   budget: z.enum(values(budgetOptions), {
     errorMap: () => ({ message: 'Choose a budget range.' }),
@@ -49,7 +59,7 @@ export const contactSchema = z.object({
   message: z
     .string()
     .trim()
-    .min(1, 'Tell me a little about what you need.')
+    .min(1, 'Tell me a bit about what you need.')
     .max(5000, 'Keep your message under 5,000 characters.'),
 });
 

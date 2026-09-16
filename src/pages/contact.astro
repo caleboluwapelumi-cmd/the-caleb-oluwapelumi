@@ -6,13 +6,15 @@ import { site } from '../data/site';
 import { HONEYPOT_FIELD, budgetOptions, serviceOptions } from '../lib/schema';
 
 const calUrl = `https://cal.com/${site.calLink}`;
-// TODO(copy): WhatsApp prefilled opener.
-const whatsappOpener = 'TODO(copy): WhatsApp opener message';
+const whatsappOpener = 'Hi Caleb, I found your website and I’d like to talk about a project.';
 const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(whatsappOpener)}`;
 ---
 
-{/* TODO(copy): page heading, meta description and every label below. */}
-<Page title="Contact" heading="Let’s Talk" description="TODO(copy): contact page meta description">
+<Page
+  title="Contact"
+  heading="Let’s Talk"
+  description="Tell Caleb Oluwapelumi what you’re building or trying to solve — website, video, paid ads, or a digital problem worth a second look."
+>
   <p slot="lede">
     Tell me what you need, what you’re trying to achieve, or what you’re currently struggling with.
     I’ll review it and we’ll determine the right way to approach it.
@@ -28,7 +30,10 @@ const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(wh
       data-cal-title="Book a Strategy Session calendar"
     >
       <h2 id="book-title">Book a Strategy Session</h2>
-      <p class="measure">TODO(copy): what the session is, how long it takes, who it's for</p>
+      <p class="measure">
+        A focused 30-minute call to talk through what you need and whether we’re a fit to work
+        together.
+      </p>
       <div class="book-actions">
         {/* A real link: with JS off, or before Cal loads, this still books. */}
         <Button href={calUrl} variant="primary" rel="noopener">
@@ -42,10 +47,12 @@ const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(wh
     <section class="panel" aria-labelledby="form-title">
       <h2 id="form-title">Send a message</h2>
 
+      {/* Caleb's wording, with the two routes it names made into real links. */}
       <noscript>
         <p class="notice">
-          TODO(copy): the form's spam check needs JavaScript — email
-          <a href={`mailto:${site.email}`}>{site.email}</a> instead
+          This form needs JavaScript to submit. If you’re seeing this, please
+          <a href={`mailto:${site.email}`}>email me directly</a> or
+          <a href={whatsappUrl} rel="noopener">reach out on WhatsApp</a> instead.
         </p>
       </noscript>
 
@@ -159,15 +166,20 @@ const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(wh
         </div>
       </form>
 
+      {/* Same wording as /contact/sent and /contact/not-sent, which the no-JS post lands on. */}
       <div class="result" data-form-success hidden>
         <h3 tabindex="-1">Message sent</h3>
-        <p class="measure">TODO(copy): what happens next, and by when</p>
+        <p class="measure">
+          Thanks — I’ve got it. I’ll get back to you within 1–2 business days. If it’s urgent, reach
+          me on <a href={whatsappUrl} rel="noopener">WhatsApp</a>.
+        </p>
       </div>
 
       <div class="result result--failure" data-form-failure hidden>
-        <h3 tabindex="-1">That didn’t send</h3>
+        <h3 tabindex="-1">Something went wrong</h3>
         <p class="measure">
-          TODO(copy): retry prompt — or email <a href={`mailto:${site.email}`}>{site.email}</a> directly
+          Your message didn’t go through. Please try again, or
+          <a href={`mailto:${site.email}`}>email me directly</a> — I’ll still get it.
         </p>
       </div>
     </section>

@@ -13,12 +13,16 @@ const options = insightTags
   .map((t) => ({ value: t, label: insightTagLabels[t] }));
 ---
 
-{/* TODO(copy): meta description for the insights index. */}
-<Page title="Insights" description="TODO(copy): insights page meta description">
+<Page
+  title="Insights"
+  description="Practical thoughts on marketing, digital strategy, and business growth — lessons from actually building things."
+>
   <Fragment slot="lede">
-    <p>TODO(copy): insights page intro</p>
     <p>
-      {/* TODO(copy): RSS link label. */}
+      Practical thoughts on marketing, digital strategy, and business growth — lessons from building
+      things, not theory.
+    </p>
+    <p>
       <a href="/rss.xml">Subscribe via RSS</a>
     </p>
   </Fragment>
@@ -38,8 +42,8 @@ const options = insightTags
       </div>
     ) : (
       <div class="empty">
-        {/* TODO(copy): empty state, shown until the first post is published. */}
-        <p class="measure">TODO(copy): insights are on the way</p>
+        {/* Shown until the first post is published. */}
+        <p class="measure">New insights are on the way — check back soon.</p>
         <Button href="/contact" variant="secondary">Get in touch</Button>
       </div>
     )

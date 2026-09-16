@@ -43,7 +43,6 @@ const minutes = readingMinutes(entry.body);
 >
   <article class="shell post">
     <header class="post-header">
-      {/* TODO(copy): back link and meta labels. */}
       <p class="eyebrow"><a href="/insights" class="back">Insights</a></p>
       <h1>{data.title}</h1>
       <p class="description">{data.description}</p>
@@ -97,14 +96,13 @@ const minutes = readingMinutes(entry.body);
         <nav class="pager" aria-label="More insights">
           {prev && (
             <a href={insightHref(prev)} rel="prev" class="pager-link">
-              {/* TODO(copy): pager labels. */}
-              <span class="eyebrow">Older</span>
+              <span class="eyebrow">Previous post</span>
               <span class="pager-title">{prev.data.title}</span>
             </a>
           )}
           {next && (
             <a href={insightHref(next)} rel="next" class="pager-link pager-link--next">
-              <span class="eyebrow">Newer</span>
+              <span class="eyebrow">Next post</span>
               <span class="pager-title">{next.data.title}</span>
             </a>
           )}

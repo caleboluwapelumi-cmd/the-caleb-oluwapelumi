@@ -2,10 +2,13 @@
 // Where a native (no-JS) form post lands on success. Not for search.
 import Page from '../../layouts/Page.astro';
 import Button from '../../components/ui/Button.astro';
+import { site } from '../../data/site';
 ---
 
-{/* TODO(copy): confirmation heading and what happens next, and by when. */}
 <Page title="Message sent" noindex>
-  <p slot="lede">TODO(copy): what happens next, and by when</p>
+  <p slot="lede">
+    Thanks — I’ve got it. I’ll get back to you within 1–2 business days. If it’s urgent, reach me on
+    <a href={`https://wa.me/${site.whatsapp}`} rel="noopener">WhatsApp</a>.
+  </p>
   <Button href="/work" variant="secondary">See the work</Button>
 </Page>

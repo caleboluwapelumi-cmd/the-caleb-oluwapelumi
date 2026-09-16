@@ -4,24 +4,28 @@ export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
 
 export interface OgPage {
-  /** Eyebrow above the title. */
-  kicker: string;
   title: string;
 }
+
+/**
+ * The eyebrow above the title on every generated card. Caleb asked for one
+ * site-wide kicker rather than a per-page section label, so it isn't a prop.
+ */
+export const OG_KICKER = site.name;
 
 /**
  * Pages that get a generated OG image. Collection entries are added by the
  * route's getStaticPaths; this covers the fixed pages.
  */
-// TODO(copy): OG kickers and titles, once page copy is final.
 export const staticOgPages: Record<string, OgPage> = {
-  '/': { kicker: site.role, title: site.name },
-  '/services': { kicker: 'Services', title: 'What I do' },
-  '/pricing': { kicker: 'Pricing', title: 'Packages and prices' },
-  '/about': { kicker: 'About', title: site.name },
-  '/work': { kicker: 'Work', title: 'Selected case studies' },
-  '/insights': { kicker: 'Insights', title: 'Notes on marketing and growth' },
-  '/contact': { kicker: 'Contact', title: 'Let’s talk' },
+  // The kicker now carries the name, so the homepage card leads with the role.
+  '/': { title: site.role },
+  '/services': { title: 'What I do' },
+  '/pricing': { title: 'Packages and prices' },
+  '/about': { title: 'Strategy. Execution. Results.' },
+  '/work': { title: 'Selected case studies' },
+  '/insights': { title: 'Notes on marketing and growth' },
+  '/contact': { title: 'Let’s talk' },
 };
 
 const trimSlash = (path: string) => (path.length > 1 ? path.replace(/\/+$/, '') : path);

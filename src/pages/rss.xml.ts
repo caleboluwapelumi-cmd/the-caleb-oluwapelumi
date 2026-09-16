@@ -8,8 +8,8 @@ export async function GET(context: APIContext) {
   const posts = await getPublishedInsights();
   return rss({
     title: `${site.name} · Insights`,
-    // TODO(copy): feed description.
-    description: 'TODO(copy): insights feed description',
+    description:
+      'Practical insights on marketing, digital strategy, and business growth from Caleb Oluwapelumi.',
     site: context.site ?? site.baseUrl,
     items: posts.map((post) => ({
       title: post.data.title,

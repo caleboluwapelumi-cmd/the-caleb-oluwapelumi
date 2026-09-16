@@ -15,22 +15,25 @@ import { isPriced } from '../data/pricing';
 // Leads, then build-up, then supporting — the same hierarchy as the homepage grid.
 const ordered: readonly Service[] = [...leadServices, ...buildUpServices, ...supportingServices];
 
-// TODO(copy): tier labels.
 const tierLabel: Record<Service['tier'], string> = {
-  lead: 'Core service',
-  'build-up': 'Build-up service',
-  supporting: 'Supporting service',
+  lead: 'Core services',
+  'build-up': 'Positioning',
+  supporting: 'Also available',
 };
 ---
 
-{/* TODO(copy): meta description for the services page. */}
-<Page title="Services" description="TODO(copy): services page meta description">
-  <p slot="lede">TODO(copy): services page intro</p>
+<Page
+  title="Services"
+  description="Web development, video editing, paid advertising, and supporting digital services — practical work built around what your business needs."
+>
+  <p slot="lede">
+    Practical solutions for businesses that want to grow — pick what you need, or tell me what
+    you’re solving.
+  </p>
 
   <div class="layout">
     <nav class="toc" aria-labelledby="toc-title">
-      {/* TODO(copy): table of contents label. */}
-      <h2 id="toc-title" class="eyebrow">On this page</h2>
+      <h2 id="toc-title" class="eyebrow">Jump to a service</h2>
       <ol role="list">
         {
           ordered.map((service) => (
@@ -51,7 +54,6 @@ const tierLabel: Record<Service['tier'], string> = {
               <h2 id={`${service.slug}-title`}>{service.name}</h2>
 
               <div class="detail">
-                {/* TODO(copy): subheading labels. */}
                 <h3>What it is</h3>
                 <p>{service.whatItIs}</p>
 
@@ -66,10 +68,10 @@ const tierLabel: Record<Service['tier'], string> = {
                 </ul>
               </div>
 
+              {/* Repeated down the page, so each CTA names its service to screen readers. */}
               <div class="actions">
-                {/* TODO(copy): CTA labels. */}
                 <Button href={`/contact?service=${service.slug}`} variant="primary">
-                  Talk about {service.name.toLowerCase()}
+                  Get Started<span class="sr-only"> with {service.name.toLowerCase()}</span>
                 </Button>
                 {isPriced(service.slug) && (
                   <Button href={`/pricing#${service.slug}`} variant="ghost">

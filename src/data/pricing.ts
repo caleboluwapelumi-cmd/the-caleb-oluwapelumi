@@ -36,6 +36,13 @@ export interface PricedService {
   note?: string;
 }
 
+/**
+ * Sits above the closing line: the figures are indicative, not a quote. Caleb
+ * asked for both, in this order — the caveat first, then his closing line.
+ */
+export const PRICING_PLACEHOLDER_NOTE =
+  'Figures shown are placeholders — final pricing is confirmed after scoping the project.';
+
 /** Closes the pricing tables. */
 export const PRICING_CLOSING =
   'Final project pricing is confirmed after understanding the scope of work.';

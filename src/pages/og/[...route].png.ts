@@ -5,9 +5,8 @@ import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
 import { site } from '../../data/site';
 import { token } from '../../lib/theme';
-import { OG_HEIGHT, OG_WIDTH, routeFor, staticOgPages, type OgPage } from '../../lib/og';
+import { OG_HEIGHT, OG_KICKER, OG_WIDTH, routeFor, staticOgPages, type OgPage } from '../../lib/og';
 import { getPublishedInsights, getPublishedWork, insightHref, workHref } from '../../lib/collections';
-import { workCategoryLabels } from '../../data/taxonomy';
 
 /**
  * Per-page Open Graph images, rendered once at build time. satori turns the
@@ -37,7 +36,7 @@ const node = (type: string, style: Record<string, unknown>, children: unknown) =
   props: { style, children },
 });
 
-function card({ kicker, title }: OgPage) {
+function card({ title }: OgPage) {
   return node(
     'div',
     {
@@ -59,7 +58,7 @@ function card({ kicker, title }: OgPage) {
           node(
             'div',
             { fontSize: 28, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: muted },
-            kicker,
+            OG_KICKER,
           ),
           node(
             'div',
@@ -77,12 +76,9 @@ function card({ kicker, title }: OgPage) {
       ),
       node(
         'div',
-        { display: 'flex', justifyContent: 'space-between', fontSize: 26, color: paper },
-        [
-          // The homepage card already says the name in the title.
-          node('div', { display: 'flex', fontWeight: 600 }, title === site.name ? '' : site.name),
-          node('div', { display: 'flex', color: muted }, site.role),
-        ],
+        { display: 'flex', justifyContent: 'flex-end', fontSize: 26, color: muted },
+        // The homepage card already leads with the role, so it isn't repeated.
+        [node('div', { display: 'flex' }, title === site.role ? '' : site.role)],
       ),
     ],
   );
@@ -96,12 +92,12 @@ export async function getStaticPaths() {
 
   const work = (await getPublishedWork()).map((entry) => ({
     params: { route: routeFor(workHref(entry)) },
-    props: { kicker: workCategoryLabels[entry.data.category], title: entry.data.title } satisfies OgPage,
+    props: { title: entry.data.title } satisfies OgPage,
   }));
 
   const insights = (await getPublishedInsights()).map((entry) => ({
     params: { route: routeFor(insightHref(entry)) },
-    props: { kicker: 'Insights', title: entry.data.title } satisfies OgPage,
+    props: { title: entry.data.title } satisfies OgPage,
   }));
 
   return [...fixed, ...work, ...insights];

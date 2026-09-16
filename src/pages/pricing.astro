@@ -2,12 +2,19 @@
 import Page from '../layouts/Page.astro';
 import Button from '../components/ui/Button.astro';
 import Reveal from '../components/ui/Reveal.astro';
-import { pricing, formatAmount, PRICING_CLOSING } from '../data/pricing';
+import {
+  pricing,
+  formatAmount,
+  PRICING_CLOSING,
+  PRICING_PLACEHOLDER_NOTE,
+} from '../data/pricing';
 import { getService } from '../data/services';
 ---
 
-{/* TODO(copy): meta description for the pricing page. */}
-<Page title="Pricing" description="TODO(copy): pricing page meta description">
+<Page
+  title="Pricing"
+  description="Starting prices for web development, video editing, paid advertising, consultation, and digital solutions."
+>
   <p slot="lede">
     Every project is different, so pricing depends on scope, complexity, and requirements. These
     packages are a starting point.
@@ -30,9 +37,8 @@ import { getService } from '../data/services';
                   </p>
                   {tier.detail && <p class="detail">{tier.detail}</p>}
                   <div class="tier-cta">
-                    {/* TODO(copy): CTA label. */}
                     <Button href={`/contact?service=${slug}`} variant="secondary">
-                      Enquire<span class="sr-only"> about {service.name}: {tier.name}</span>
+                      Get a Quote<span class="sr-only"> for {service.name}: {tier.name}</span>
                     </Button>
                   </div>
                 </li>
@@ -44,14 +50,17 @@ import { getService } from '../data/services';
       })
     }
 
+    <p class="placeholder-note">{PRICING_PLACEHOLDER_NOTE}</p>
     <p class="closing">{PRICING_CLOSING}</p>
 
     {/* Strategy, positioning and content strategy have no price card — they route here. */}
     <section class="unsure" aria-labelledby="unsure-title">
       <Reveal class="unsure-card">
-        {/* TODO(copy): "Not sure what you need?" card body and CTA label. */}
         <h2 id="unsure-title">Not sure what you need?</h2>
-        <p class="measure">TODO(copy): route strategy and positioning enquiries to a booked session</p>
+        <p class="measure">
+          Tell me what you’re trying to build or solve, and we’ll figure out the right scope
+          together.
+        </p>
         <div class="tier-cta">
           <Button href="/contact#book" variant="primary">Book a Strategy Session</Button>
         </div>
@@ -128,9 +137,16 @@ import { getService } from '../data/services';
     color: var(--color-accent-ink);
   }
 
-  .closing {
+  .placeholder-note {
     max-width: 68ch;
     margin-top: clamp(3rem, 2.5rem + 2vw, 4rem);
+    font-size: var(--text-small);
+    color: var(--color-ink-muted);
+  }
+
+  .closing {
+    max-width: 68ch;
+    margin-top: 0.75rem;
     font-family: var(--font-display);
     font-size: var(--text-h3);
     line-height: 1.25;

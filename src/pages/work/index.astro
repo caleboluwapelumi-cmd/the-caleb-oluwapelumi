@@ -15,8 +15,10 @@ const options = workCategories
   .map((c) => ({ value: c, label: workCategoryLabels[c] }));
 ---
 
-{/* TODO(copy): meta description for the work index. */}
-<Page title="Work" description="TODO(copy): work page meta description">
+<Page
+  title="Work"
+  description="Selected work across web development, paid advertising, video content, and digital solutions — real problems, practical solutions."
+>
   <p slot="lede">Every project starts with a business problem, not a deliverable.</p>
 
   {
@@ -33,8 +35,8 @@ const options = workCategories
       </div>
     ) : (
       <div class="empty">
-        {/* TODO(copy): empty state, shown until the first case study is published. */}
-        <p class="measure">TODO(copy): case studies are on the way</p>
+        {/* Shown until the first case study is published. */}
+        <p class="measure">New case studies are on the way — check back soon.</p>
         <Button href="/contact" variant="primary">Let’s Talk</Button>
       </div>
     )

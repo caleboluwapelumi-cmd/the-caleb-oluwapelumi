@@ -6,7 +6,7 @@
 export const workCategories = ['web', 'marketing', 'creative', 'solutions'] as const;
 export type WorkCategory = (typeof workCategories)[number];
 
-// TODO(copy): filter labels.
+// Displayed on the /work filter bar and each case study eyebrow.
 export const workCategoryLabels: Record<WorkCategory, string> = {
   web: 'Web',
   marketing: 'Marketing',
@@ -26,7 +26,7 @@ export const insightTags = [
 ] as const;
 export type InsightTag = (typeof insightTags)[number];
 
-// TODO(copy): tag labels.
+// Displayed on the /insights filter bar and post tag chips.
 export const insightTagLabels: Record<InsightTag, string> = {
   marketing: 'Marketing',
   sales: 'Sales',

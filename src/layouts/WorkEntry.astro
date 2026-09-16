@@ -49,7 +49,6 @@ const siteUrl = Astro.site ?? Astro.url;
       <h1>{data.title}</h1>
       <p class="summary measure">{data.summary}</p>
 
-      {/* TODO(copy): meta labels. */}
       <dl class="meta">
         {
           client && (
@@ -97,7 +96,6 @@ const siteUrl = Astro.site ?? Astro.url;
     {
       data.outcomes.length > 0 && (
         <section class="shell outcomes" aria-labelledby="outcomes-title">
-          {/* TODO(copy): outcomes heading. */}
           <h2 id="outcomes-title" class="eyebrow">Outcomes</h2>
           <Reveal as="div" stagger class="outcome-list">
             {data.outcomes.map((outcome) => (
@@ -118,9 +116,8 @@ const siteUrl = Astro.site ?? Astro.url;
       {
         data.liveUrl && (
           <p class="live">
-            {/* TODO(copy): live link label. */}
             <a href={data.liveUrl} rel="noopener">
-              Visit the live site<span class="sr-only"> (opens external site)</span>
+              Visit live site<span class="sr-only"> (opens external site)</span>
             </a>
           </p>
         )
@@ -130,7 +127,6 @@ const siteUrl = Astro.site ?? Astro.url;
     {
       data.gallery.length > 0 && (
         <section class="shell gallery" aria-labelledby="gallery-title">
-          {/* TODO(copy): gallery heading. */}
           <h2 id="gallery-title" class="sr-only">Gallery</h2>
           <Reveal as="div" stagger class="gallery-grid">
             {data.gallery.map((item) => (
@@ -155,14 +151,13 @@ const siteUrl = Astro.site ?? Astro.url;
         <nav class="shell pager" aria-label="More case studies">
           {prev && (
             <a href={workHref(prev)} rel="prev" class="pager-link">
-              {/* TODO(copy): pager labels. */}
-              <span class="eyebrow">Previous</span>
+              <span class="eyebrow">Previous project</span>
               <span class="pager-title">{prev.data.title}</span>
             </a>
           )}
           {next && (
             <a href={workHref(next)} rel="next" class="pager-link pager-link--next">
-              <span class="eyebrow">Next</span>
+              <span class="eyebrow">Next project</span>
               <span class="pager-title">{next.data.title}</span>
             </a>
           )}

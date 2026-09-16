@@ -6,9 +6,10 @@ import Button from '../../components/ui/Button.astro';
 import { site } from '../../data/site';
 ---
 
-{/* TODO(copy): failure heading and body. */}
-<Page title="Message not sent" noindex>
-  <p slot="lede">TODO(copy): the message didn't go through — use one of these instead</p>
+<Page title="Message not sent" heading="Something went wrong" noindex>
+  <p slot="lede">
+    Your message didn’t go through. Please try again, or email me directly — I’ll still get it.
+  </p>
   <div class="actions">
     <Button href={`mailto:${site.email}`} variant="primary">Email {site.email}</Button>
     <Button href={`https://wa.me/${site.whatsapp}`} variant="secondary" rel="noopener">
