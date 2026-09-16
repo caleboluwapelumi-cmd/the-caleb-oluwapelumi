@@ -5,6 +5,13 @@ export const OG_HEIGHT = 630;
 
 export interface OgPage {
   title: string;
+  /**
+   * Content-type label rendered under the title — "Case Study", "Insight".
+   * The site-wide kicker replaced the old per-card type label; this puts the
+   * label back as a subtitle rather than a second kicker, so the two never
+   * compete for the same slot.
+   */
+  subtitle?: string;
 }
 
 /**

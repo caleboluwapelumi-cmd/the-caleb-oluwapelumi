@@ -36,7 +36,7 @@ const node = (type: string, style: Record<string, unknown>, children: unknown) =
   props: { style, children },
 });
 
-function card({ title }: OgPage) {
+function card({ title, subtitle }: OgPage) {
   return node(
     'div',
     {
@@ -72,6 +72,11 @@ function card({ title }: OgPage) {
             },
             title,
           ),
+          // Sentence case and accent-coloured, so it reads as a label belonging
+          // to the title rather than a second kicker. Accent on ink is 5.65:1.
+          ...(subtitle
+            ? [node('div', { marginTop: 18, display: 'flex', fontSize: 30, fontWeight: 600, color: accent }, subtitle)]
+            : []),
         ],
       ),
       node(
@@ -92,12 +97,12 @@ export async function getStaticPaths() {
 
   const work = (await getPublishedWork()).map((entry) => ({
     params: { route: routeFor(workHref(entry)) },
-    props: { title: entry.data.title } satisfies OgPage,
+    props: { title: entry.data.title, subtitle: 'Case Study' } satisfies OgPage,
   }));
 
   const insights = (await getPublishedInsights()).map((entry) => ({
     params: { route: routeFor(insightHref(entry)) },
-    props: { title: entry.data.title } satisfies OgPage,
+    props: { title: entry.data.title, subtitle: 'Insight' } satisfies OgPage,
   }));
 
   return [...fixed, ...work, ...insights];
