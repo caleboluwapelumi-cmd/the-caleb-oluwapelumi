@@ -2,6 +2,7 @@
 import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
 import Page from '../layouts/Page.astro';
 import Button from '../components/ui/Button.astro';
+import Icon from '../components/ui/Icon.astro';
 import { site } from '../data/site';
 import { HONEYPOT_FIELD, budgetOptions, serviceOptions } from '../lib/schema';
 
@@ -186,9 +187,18 @@ const whatsappUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(wh
 
     <section class="panel direct" aria-labelledby="direct-title">
       <h2 id="direct-title">Other ways to reach me</h2>
+      {/* The icons decorate labels that already name the channel, so each one
+          is hidden from the accessible name rather than doubling it up. */}
       <div class="direct-actions">
-        <Button href={whatsappUrl} variant="secondary" rel="noopener">Message on WhatsApp</Button>
-        <Button href={`mailto:${site.email}`} variant="ghost">{site.email}</Button>
+        <Button href={whatsappUrl} variant="secondary" rel="noopener">
+          <Icon name="message-circle" size={18} />Message on WhatsApp
+        </Button>
+        <Button href={site.linkedin} variant="secondary" rel="me noopener">
+          <Icon name="id-card" size={18} />Connect on LinkedIn
+        </Button>
+        <Button href={`mailto:${site.email}`} variant="ghost">
+          <Icon name="mail" size={18} />{site.email}
+        </Button>
       </div>
     </section>
   </div>

@@ -1,5 +1,6 @@
 ---
 import Button from '../ui/Button.astro';
+import Glow from '../ui/Glow.astro';
 import Reveal from '../ui/Reveal.astro';
 
 export interface Props {
@@ -19,6 +20,14 @@ const {
 ---
 
 <section class="cta-band" aria-labelledby={id}>
+  <Glow
+    opacity={0.18}
+    size="40rem"
+    bottom="-16rem"
+    left="-10rem"
+    parallax={0.12}
+    parallaxStart="top bottom"
+  />
   <Reveal class="shell inner">
     <h2 id={id}>{title}</h2>
     <p class="measure">
@@ -34,11 +43,30 @@ const {
 </section>
 
 <style>
-  /* On ink the bright accent passes at any size, so it can carry small UI here. */
+  /*
+   * On ink the bright accent passes at any size, so it can carry small UI here.
+   * The gradient only warms the ink; it does not lighten it. Measured against
+   * the far stop, and against the glow's peak on top of that stop: paper text
+   * 13.84:1, and the accent rule and focus ring 4.30:1 — both still clear of
+   * their floors, so nothing on this band needed re-colouring.
+   *
+   * background-color stays as the paint under the gradient, so a failed image
+   * decode leaves dark ink rather than paper text on paper.
+   */
   .cta-band {
+    position: relative;
+    /* The glow is positioned past the left edge — see the note on .hero. */
+    overflow: hidden;
     padding-block: clamp(4rem, 3rem + 4vw, 7rem);
     background-color: var(--color-ink);
+    background-image: var(--gradient-cta);
     color: var(--color-paper);
+  }
+
+  /* Above the decorative layer, which sits at z-index 0. */
+  .inner {
+    position: relative;
+    z-index: 1;
   }
 
   h2 {

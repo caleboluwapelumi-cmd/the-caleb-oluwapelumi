@@ -81,15 +81,23 @@ const siteUrl = Astro.site ?? Astro.url;
       </dl>
     </header>
 
-    <div class="shell cover">
-      <Image
-        src={data.cover}
-        alt={data.coverAlt}
-        widths={[640, 960, 1280, 1920]}
-        sizes="(min-width: 72rem) 69.5rem, calc(100vw - 2.5rem)"
-        loading="eager"
-        fetchpriority="high"
-      />
+    <div class="shell">
+      {/* The cover is a fixed-ratio mask and the image inside it is taller than
+          the frame, so the parallax has somewhere to travel. Unmasked, the
+          drift would tear a gap open along the top edge. The overhang is 20% of
+          the image against a drift capped at 12%, so the frame can never run
+          out of image at any viewport width. */}
+      <div class="cover">
+        <Image
+          src={data.cover}
+          alt={data.coverAlt}
+          widths={[640, 960, 1280, 1920]}
+          sizes="(min-width: 72rem) 69.5rem, calc(100vw - 2.5rem)"
+          loading="eager"
+          fetchpriority="high"
+          data-parallax="0.12"
+        />
+      </div>
     </div>
 
     {/* Skipped entirely when there are no outcomes, rather than an empty shell. */}
@@ -221,11 +229,19 @@ const siteUrl = Astro.site ?? Astro.url;
     gap: 0.5rem;
   }
 
-  .cover :global(img) {
-    width: 100%;
-    height: auto;
+  .cover {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
     border-radius: 0.5rem;
     background-color: var(--color-paper-alt);
+  }
+
+  .cover :global(img) {
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+    object-position: center top;
   }
 
   .outcomes {

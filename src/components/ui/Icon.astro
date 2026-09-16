@@ -1,0 +1,47 @@
+---
+import { iconBody, type IconName } from '../../lib/icons';
+
+export interface Props {
+  name: IconName;
+  /** Rendered size in px; converted to rem so it scales with the user's text. */
+  size?: number;
+  /** Lucide's file default is 2. 1.5 is the thin line this site uses. */
+  strokeWidth?: number;
+  class?: string;
+}
+
+const { name, size = 24, strokeWidth = 1.5, class: className } = Astro.props;
+
+/*
+ * Always aria-hidden. An icon that decorates labelled text adds nothing to the
+ * accessible name; an icon standing alone as a control needs its label on the
+ * control (aria-label on the link or button), never on the glyph — otherwise
+ * the name lives in a child of the thing screen readers actually announce.
+ */
+---
+
+<svg
+  class:list={['icon', className]}
+  style={`--icon-size: ${size / 16}rem`}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  set:html={iconBody(name)}
+/>
+
+<style>
+  .icon {
+    display: block;
+    flex: none;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    /* Inherits whatever colour the parent text is, so every accent rule in
+       global.css keeps applying — there is no icon-specific colour. */
+    color: inherit;
+  }
+</style>

@@ -1,10 +1,15 @@
 ---
 import Button from '../ui/Button.astro';
+import Glow from '../ui/Glow.astro';
 import { site } from '../../data/site';
 ---
 
-{/* Above the fold: no reveal, no animation — it would delay LCP. */}
+{/* Above the fold: no reveal, no animation on anything that carries meaning —
+    it would delay LCP. The glow behind it is decorative and aria-hidden, and
+    its parallax is a transform on an empty div, so it moves nothing that the
+    browser measures for LCP and touches neither the headline nor the subhead. */}
 <section class="hero" aria-labelledby="hero-title">
+  <Glow opacity={0.1} size="46rem" top="-12rem" right="-14rem" parallax={0.15} />
   <div class="shell hero-inner">
     <p class="eyebrow">{site.role}</p>
     <h1 id="hero-title">{site.name}</h1>
@@ -23,7 +28,18 @@ import { site } from '../../data/site';
 
 <style>
   .hero {
+    position: relative;
+    /* The glow is positioned past the right edge; without this it would widen
+       the document and put a horizontal scrollbar on every page. */
+    overflow: hidden;
     padding-block: clamp(3rem, 2rem + 5vw, 7rem) clamp(3rem, 2rem + 3vw, 5rem);
+    background-image: var(--gradient-hero);
+  }
+
+  /* Above the decorative layer, which sits at z-index 0. */
+  .hero-inner {
+    position: relative;
+    z-index: 1;
   }
 
   h1 {

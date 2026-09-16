@@ -1,7 +1,9 @@
 ---
 import SectionHeader from '../ui/SectionHeader.astro';
 import Reveal from '../ui/Reveal.astro';
+import Icon from '../ui/Icon.astro';
 import { leadServices, buildUpServices, supportingServices, serviceHref } from '../../data/services';
+import { serviceIcons } from '../../lib/service-icons';
 ---
 
 <section class="section section--alt" aria-labelledby="services-title">
@@ -15,9 +17,12 @@ import { leadServices, buildUpServices, supportingServices, serviceHref } from '
       {
         leadServices.map((service, i) => (
           <li class="card">
-            <span class="card-index" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
-            </span>
+            <div class="card-head">
+              <span class="card-index" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <Icon name={serviceIcons[service.slug]} size={28} />
+            </div>
             <h3>
               <a href={serviceHref(service.slug)} class="card-link">
                 {service.name}
@@ -81,12 +86,21 @@ import { leadServices, buildUpServices, supportingServices, serviceHref } from '
   }
 
   /* The card's own background is paper, not the band's paper-alt: bright accent
-     is 3.22:1 here, which clears the large-text floor at this size. */
+     is 3.22:1 here, which clears the large-text floor for the numeral and the
+     3:1 graphics floor for the icon stroke. */
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--color-accent);
+  }
+
   .card-index {
     font-family: var(--font-display);
     font-size: var(--text-h2);
     line-height: 1;
-    color: var(--color-accent);
+    color: inherit;
   }
 
   .card-link {

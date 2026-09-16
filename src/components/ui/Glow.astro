@@ -1,0 +1,56 @@
+---
+export interface Props {
+  /**
+   * Peak alpha of the accent. The ceiling is contrast-derived, not taste:
+   * 0.10 over paper bands (ink-muted still measures 4.58:1 through the full
+   * accent-wash + glow stack), 0.18 over ink (paper 14.86:1). Going higher on
+   * a paper band drops small muted text under AA — see the @theme note.
+   */
+  opacity?: number;
+  /** Diameter. One large soft shape per section, never tiled, never full-bleed. */
+  size?: string;
+  top?: string;
+  right?: string;
+  bottom?: string;
+  left?: string;
+  /** Scroll-linked drift, as a fraction of the glow's own height. Reduced
+      motion skips it entirely — see src/lib/motion.ts. */
+  parallax?: number;
+  /** ScrollTrigger start. 'top bottom' for a section far down the page, which
+      may never reach the viewport top. See the note in src/lib/motion.ts. */
+  parallaxStart?: string;
+}
+
+const {
+  opacity = 0.1,
+  size = '40rem',
+  top,
+  right,
+  bottom,
+  left,
+  parallax,
+  parallaxStart,
+} = Astro.props;
+
+const style = [
+  `--glow-opacity:${opacity}`,
+  `width:${size}`,
+  `height:${size}`,
+  top !== undefined && `top:${top}`,
+  right !== undefined && `right:${right}`,
+  bottom !== undefined && `bottom:${bottom}`,
+  left !== undefined && `left:${left}`,
+]
+  .filter(Boolean)
+  .join(';');
+---
+
+{/* Decorative only: no role, no name, not in the a11y tree, not hit-testable. */}
+<div
+  class="glow"
+  style={style}
+  aria-hidden="true"
+  data-parallax={parallax !== undefined ? String(parallax) : undefined}
+  data-parallax-start={parallaxStart}
+>
+</div>

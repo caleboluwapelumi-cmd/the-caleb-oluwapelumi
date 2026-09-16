@@ -1,4 +1,5 @@
 ---
+import Icon from '../ui/Icon.astro';
 import { site } from '../../data/site';
 import { services, serviceHref } from '../../data/services';
 import { isCurrent } from '../../lib/nav';
@@ -41,10 +42,24 @@ const year = new Date().getFullYear();
 
       <section aria-labelledby="footer-contact">
         <h2 id="footer-contact">Contact</h2>
-        <ul role="list">
-          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-          <li><a href={site.linkedin} rel="me noopener">LinkedIn</a></li>
-          <li><a href={`https://wa.me/${site.whatsapp}`} rel="noopener">WhatsApp</a></li>
+        {/* Each icon decorates a link that already names its channel in text,
+            so the icons are hidden rather than repeating the label. */}
+        <ul role="list" class="contact-list">
+          <li>
+            <a href={`mailto:${site.email}`}>
+              <Icon name="mail" size={18} />{site.email}
+            </a>
+          </li>
+          <li>
+            <a href={site.linkedin} rel="me noopener">
+              <Icon name="id-card" size={18} />LinkedIn
+            </a>
+          </li>
+          <li>
+            <a href={`https://wa.me/${site.whatsapp}`} rel="noopener">
+              <Icon name="message-circle" size={18} />WhatsApp
+            </a>
+          </li>
         </ul>
       </section>
     </div>
@@ -104,6 +119,12 @@ const year = new Date().getFullYear();
 
   a[aria-current='page'] {
     text-decoration-line: underline;
+  }
+
+  /* The icon sits outside the underline: it is a mark, not part of the label. */
+  .contact-list a {
+    gap: 0.5rem;
+    color: var(--color-ink-body);
   }
 
   @media (hover: hover) {

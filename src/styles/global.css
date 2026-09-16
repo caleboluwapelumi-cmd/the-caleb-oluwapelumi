@@ -3,6 +3,11 @@
 @import "@fontsource-variable/fraunces";
 @import "@fontsource-variable/inter";
 
+/* Lenis's own rules. Every selector is scoped to a class Lenis adds at
+   runtime, so with the motion module unloaded — JS off, reduced motion — none
+   of this matches and the browser's native scroll is untouched. */
+@import "lenis/dist/lenis.css";
+
 @theme {
   /* Lock the palette: Tailwind's default colours (blue-500 etc.) stop
      generating, so an off-brand utility produces no CSS instead of shipping. */
@@ -36,6 +41,42 @@
                                    fill is 5.10:1. Thinnest margin is 4.51:1
                                    on paper-alt — don't lighten it. */
   --color-accent-wash:#FFF1EC;  /* tinted panels */
+
+  /* The warm far stop of the CTA band gradient. Paper on this is 17.26:1 and
+     bright accent 5.36:1 (both measured) — every contrast decision that held
+     on flat ink still holds at the gradient's darkest and warmest end. */
+  --color-ink-warm:   #1C1512;
+
+  /* Decorative gradients -----------------------------------------------------
+     Background layers only. Text never sits on one until the composite has
+     been measured; each use site carries the ratio it was checked at. Accent
+     glow only — no second hue enters the palette through a gradient. */
+
+  /* One soft blurred shape per section, never tiled. Peak opacity is set at
+     the use site, because the ceiling depends on what it sits over — these are
+     measured, not chosen:
+
+       over accent-wash (hero)  0.10 -> ink-muted 4.58:1   AA
+                                0.12 -> ink-muted 4.47:1   FAILS
+       over ink-warm (CTA band) 0.18 -> paper 13.84:1, accent 4.30:1
+
+     So the hero caps at 0.10. The CTA band can take 0.18 because the only
+     accent on it is a rule and a focus ring — graphics, floor 3:1 — while its
+     text is paper. Raising the hero to the same figure would put the eyebrow
+     under AA. */
+  --gradient-glow: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
+
+  /* Hero: the wash is strongest at the top and gone by 72%, so the band hands
+     back to flat paper before the section below it. */
+  --gradient-hero: linear-gradient(180deg, var(--color-accent-wash) 0%, var(--color-paper) 72%);
+
+  /* CTA band: ink warming across the diagonal, not a hue change. */
+  --gradient-cta: linear-gradient(135deg, var(--color-ink) 0%, var(--color-ink-warm) 100%);
+
+  /* Glass — the header on scroll and card hover states, nowhere else. */
+  --glass-blur: 12px;
+  --glass-opacity: 75%;
+  --glow-blur: 80px;
 
   /* Type */
   --font-display: "Fraunces Variable", Georgia, serif;
@@ -267,21 +308,38 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Scroll reveal — src/lib/reveal.ts. The hidden state only exists under
-   .reveal-ready, which the script adds. If JS never runs, nothing is hidden.
+   Scroll reveal — src/lib/motion.ts. The hidden state only exists under
+   .reveal-ready, which the script adds after GSAP has actually loaded. If the
+   module never runs — JS off, a failed chunk, reduced motion — nothing here
+   matches and the page is simply visible.
+
+   No transition: GSAP owns the animation now, so a CSS transition on the same
+   properties would be a second animator fighting it. The hidden state is the
+   only thing CSS still contributes.
 --------------------------------------------------------------------------- */
 .reveal-ready [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
-  transition:
-    opacity var(--dur-base) var(--ease-out-expo),
-    transform var(--dur-base) var(--ease-out-expo);
-  transition-delay: calc(var(--reveal-index, 0) * var(--dur-stagger));
 }
 
 .reveal-ready [data-reveal].is-revealed {
   opacity: 1;
   transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Decorative accent glow. One per section, absolutely positioned, blurred,
+   never interactive. Sized and placed by the component that renders it.
+--------------------------------------------------------------------------- */
+@layer components {
+  .glow {
+    position: absolute;
+    z-index: 0;
+    background-image: var(--gradient-glow);
+    filter: blur(var(--glow-blur));
+    opacity: var(--glow-opacity, 0.1);
+    pointer-events: none;
+  }
 }
 
 ::view-transition-old(root),

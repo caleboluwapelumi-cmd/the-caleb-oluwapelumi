@@ -1,22 +1,28 @@
 ---
 import SectionHeader from '../ui/SectionHeader.astro';
 import Reveal from '../ui/Reveal.astro';
+import Icon from '../ui/Icon.astro';
+import type { IconName } from '../../lib/icons';
 
-const steps = [
+const steps: { title: string; body: string; icon: IconName }[] = [
   {
     title: 'Understand',
+    icon: 'search',
     body: 'I start by understanding your business, audience, goals, and the problem you need solved.',
   },
   {
     title: 'Strategise',
+    icon: 'route',
     body: 'I identify the right approach, priorities, and opportunities before jumping into execution.',
   },
   {
     title: 'Execute',
+    icon: 'hammer',
     body: 'I turn the strategy into the actual work, whether that means a campaign, website, content, or digital solution.',
   },
   {
     title: 'Improve',
+    icon: 'trending-up',
     body: 'Good work can always get better. I review what is working, identify what isn’t, and make the necessary adjustments.',
   },
 ];
@@ -32,9 +38,13 @@ const steps = [
       {
         steps.map((step, i) => (
           <li>
-            <span class="step-number" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
-            </span>
+            <div class="step-head">
+              <span class="step-number" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              {/* Decorative: the step name beside it already says this. */}
+              <Icon name={step.icon} size={24} />
+            </div>
             <h3>
               <span class="sr-only">Step {i + 1}: </span>
               {step.title}
@@ -66,14 +76,21 @@ const steps = [
   }
 
   /* Bright accent is ~2.98:1 on the paper-alt band — under even the
-     large-text floor — so numerals here use accent-ink. */
-  .step-number {
-    display: block;
+     large-text floor — so the numeral and the icon stroke both use
+     accent-ink, which measures 4.51:1 here. */
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     margin-bottom: 1rem;
+    color: var(--color-accent-ink);
+  }
+
+  .step-number {
     font-family: var(--font-display);
     font-size: var(--text-h2);
     line-height: 1;
-    color: var(--color-accent-ink);
+    color: inherit;
   }
 
   p {

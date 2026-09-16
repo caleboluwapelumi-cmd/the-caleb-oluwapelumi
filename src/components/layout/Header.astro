@@ -76,6 +76,7 @@ const pathname = Astro.url.pathname;
     background-color: var(--color-paper);
     border-bottom: 1px solid transparent;
     transition:
+      background-color var(--dur-base) var(--ease-out-expo),
       border-color var(--dur-base) var(--ease-out-expo),
       margin-bottom var(--dur-base) var(--ease-out-expo);
   }
@@ -101,6 +102,23 @@ const pathname = Astro.url.pathname;
   .site-header[data-scrolled] {
     margin-bottom: 1.5rem;
     border-bottom-color: var(--color-rule);
+  }
+
+  /*
+   * Glass, on scroll only. The @supports gate matters: a browser without
+   * backdrop-filter keeps the solid paper background and the rule border
+   * above, which is what shipped before this and works — so the fallback is
+   * not a degraded state, it is the previous design.
+   */
+  @supports (backdrop-filter: blur(1px)) {
+    .site-header[data-scrolled] {
+      background-color: color-mix(
+        in srgb,
+        var(--color-paper) var(--glass-opacity),
+        transparent
+      );
+      backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+    }
   }
 
   .site-header[data-scrolled] .bar {

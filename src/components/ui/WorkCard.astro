@@ -62,7 +62,10 @@ const {
     border-radius: 0.5rem;
     overflow: hidden;
     background-color: var(--color-paper);
-    transition: border-color var(--dur-fast) var(--ease-out-expo);
+    transition:
+      background-color var(--dur-fast) var(--ease-out-expo),
+      border-color var(--dur-fast) var(--ease-out-expo),
+      transform var(--dur-base) var(--ease-out-expo);
   }
 
   .media {
@@ -113,12 +116,56 @@ const {
     color: var(--color-ink);
   }
 
+  /* :focus-within gives the keyboard the same state the mouse gets, and it is
+     outside @media (hover: hover) so it also works on a touch device with a
+     keyboard attached. */
+  .work-card:focus-within {
+    border-color: var(--color-ink);
+    transform: translateY(-4px);
+  }
+
   @media (hover: hover) {
     .work-card:hover {
       border-color: var(--color-ink);
+      transform: translateY(-4px);
     }
     .work-card:hover .card-link {
       text-decoration-line: underline;
+    }
+  }
+
+  /* The frost itself. Gated on @supports so a browser without backdrop-filter
+     keeps the opaque card rather than showing a semi-transparent one. */
+  @supports (backdrop-filter: blur(1px)) {
+    .work-card:focus-within {
+      background-color: color-mix(
+        in srgb,
+        var(--color-paper) var(--glass-opacity),
+        transparent
+      );
+      backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    }
+
+    /* Hover stays gated to real pointers, like every other hover here: a tap
+       on a touch screen would otherwise leave the frost stuck on. */
+    @media (hover: hover) {
+      .work-card:hover {
+        background-color: color-mix(
+          in srgb,
+          var(--color-paper) var(--glass-opacity),
+          transparent
+        );
+        backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+      }
+    }
+  }
+
+  /* The blur is a still image and can stay; the lift is motion and cannot.
+     Last in the file on purpose — it has to win on source order. */
+  @media (prefers-reduced-motion: reduce) {
+    .work-card:focus-within,
+    .work-card:hover {
+      transform: none;
     }
   }
 </style>

@@ -43,10 +43,44 @@ const seo = Astro.props;
 </html>
 
 <script>
-  import { initReveal } from '../lib/reveal';
+  /*
+   * GSAP and Lenis are loaded on demand, never statically. A visitor with
+   * reduced motion on downloads neither: the check happens before the import,
+   * so the cost of the motion layer is only paid by pages that will use it.
+   *
+   * Every listener is re-attached on astro:page-load, and everything the
+   * module built is killed on astro:before-swap — view transitions replace the
+   * document, and a ScrollTrigger left on a detached node stops working after
+   * the first client-side navigation.
+   */
+  const REDUCE = '(prefers-reduced-motion: reduce)';
+  let loaded = false;
 
-  // Fires on first load and after every view-transition navigation.
-  document.addEventListener('astro:page-load', initReveal);
+  async function startMotion() {
+    if (window.matchMedia(REDUCE).matches) return;
+    const { initMotion } = await import('../lib/motion');
+    loaded = true;
+    initMotion();
+  }
+
+  async function stopMotion() {
+    // Nothing to tear down until the module has actually run once. Checking
+    // the media query here would be wrong: the case that needs teardown most
+    // is the user turning reduced motion *on* mid-session.
+    if (!loaded) return;
+    const { teardownMotion } = await import('../lib/motion');
+    teardownMotion();
+  }
+
+  document.addEventListener('astro:page-load', startMotion);
+  document.addEventListener('astro:before-swap', stopMotion);
+
+  // Switching the OS setting on mid-session tears the motion layer down;
+  // switching it off loads and starts it.
+  window.matchMedia(REDUCE).addEventListener('change', (event) => {
+    if (event.matches) void stopMotion();
+    else void startMotion();
+  });
 </script>
 
 <style is:global>

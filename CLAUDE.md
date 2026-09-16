@@ -66,9 +66,17 @@ Verify work with `npm run build && npx astro check`, never by starting the dev s
 
 ## Dependencies
 
-Do not install anything not already in `package.json` without asking first, and state what it costs in bundle size and what platform primitive it replaces. The approved set for the whole build: `@astrojs/vercel`, `@astrojs/mdx`, `@astrojs/sitemap`, `@astrojs/rss`, `tailwindcss`, `@tailwindcss/vite`, `@fontsource-variable/*`, `zod` (ships with Astro), `resend`, one OG-image library (`satori` + `@resvg/resvg-js`, or `astro-og-canvas`), and as devDependencies `@astrojs/check` and `typescript`.
+Do not install anything not already in `package.json` without asking first, and state what it costs in bundle size and what platform primitive it replaces. The approved set for the whole build: `@astrojs/vercel`, `@astrojs/mdx`, `@astrojs/sitemap`, `@astrojs/rss`, `tailwindcss`, `@tailwindcss/vite`, `@fontsource-variable/*`, `zod` (ships with Astro), `resend`, one OG-image library (`satori` + `@resvg/resvg-js`, or `astro-og-canvas`), plus the three below, and as devDependencies `@astrojs/check` and `typescript`.
 
-No UI kits, no animation libraries, no utility grab-bags.
+**The motion and icon set**, added deliberately and scoped:
+
+- **`lenis`** — smooth scroll. Replaces nothing; native scroll is the fallback and is what reduced-motion users get.
+- **`gsap`**, with `ScrollTrigger` and `CustomEase`. **GSAP is entirely free as of Webflow's 2025 acquisition — every plugin, no Club tier, no paid licence.** ScrollTrigger and CustomEase ship in the same npm package and need no token. Do not re-open this; do not add a licence check; do not swap ScrollTrigger for a hand-rolled IntersectionObserver on licensing grounds.
+- **`lucide-static`** — raw SVG files only. No JS runtime is imported: `src/lib/icons.ts` pulls each `.svg` in with `?raw` and `Icon.astro` inlines the shapes at build time, so icons cost zero client bytes.
+
+`lenis` and `gsap` are the only client-side JS of any size on the site, and they are loaded by dynamic `import()` from `Base.astro` **after** a `prefers-reduced-motion` check — a visitor who asked for less motion downloads neither. Keep it that way: never move them to a static import.
+
+Beyond those three: no UI kits, no further animation libraries, no utility grab-bags.
 
 ## Known deviations
 

@@ -9,6 +9,8 @@ import {
   PRICING_PLACEHOLDER_NOTE,
 } from '../data/pricing';
 import { getService } from '../data/services';
+import Icon from '../components/ui/Icon.astro';
+import { tierIcon } from '../lib/service-icons';
 ---
 
 <Page
@@ -28,9 +30,18 @@ import { getService } from '../data/services';
           <section id={slug} class="service" aria-labelledby={`${slug}-title`}>
             <h2 id={`${slug}-title`}>{service.name}</h2>
             <Reveal as="ul" stagger class="tiers" role="list">
-              {tiers.map((tier) => (
+              {tiers.map((tier, i) => (
                 <li class="tier">
-                  <h3>{tier.name}</h3>
+                  <div class="tier-head">
+                    <Icon
+                      name={tierIcon(
+                        tier.usd === 'custom',
+                        tiers.slice(0, i).filter((t) => t.usd !== 'custom').length,
+                      )}
+                      size={20}
+                    />
+                    <h3>{tier.name}</h3>
+                  </div>
                   <p class="price">
                     {tier.from && <span class="from">From</span>}
                     <span class="amount">{formatAmount(tier.usd)}</span>
@@ -98,6 +109,65 @@ import { getService } from '../data/services';
     border: 1px solid var(--color-rule);
     border-radius: 0.5rem;
     background-color: var(--color-paper);
+    transition:
+      background-color var(--dur-fast) var(--ease-out-expo),
+      border-color var(--dur-fast) var(--ease-out-expo),
+      transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  /* Tier header: the icon is a scale marker, not a bullet — it repeats the
+     ranking the tier names already carry, so it is decorative and hidden. */
+  .tier-head {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    color: var(--color-accent-ink);
+  }
+
+  .tier-head h3 {
+    color: var(--color-ink);
+  }
+
+  .tier:focus-within {
+    border-color: var(--color-ink);
+    transform: translateY(-4px);
+  }
+
+  @media (hover: hover) {
+    .tier:hover {
+      border-color: var(--color-ink);
+      transform: translateY(-4px);
+    }
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .tier:focus-within {
+      background-color: color-mix(
+        in srgb,
+        var(--color-paper) var(--glass-opacity),
+        transparent
+      );
+      backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    }
+
+    @media (hover: hover) {
+      .tier:hover {
+        background-color: color-mix(
+          in srgb,
+          var(--color-paper) var(--glass-opacity),
+          transparent
+        );
+        backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+      }
+    }
+  }
+
+  /* The blur is static and can stay; the lift is motion and cannot. */
+  @media (prefers-reduced-motion: reduce) {
+    .tier:focus-within,
+    .tier:hover {
+      transform: none;
+    }
   }
 
   .price {
